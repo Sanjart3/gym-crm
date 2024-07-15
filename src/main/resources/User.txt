@@ -1,0 +1,6 @@
+1:Sanjar:Totliboyev:true
+2:Shohjahon:Totliboyev:true
+3:Abdullo:Navruzov:true
+4:Asilbek:Boboyev:false
+5:Jaloliddin:Jo'raboyev:true
+6:Bakitjan:Kaziyev:true
