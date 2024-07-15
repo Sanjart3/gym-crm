@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.dao.impl;
 
 import org.example.entities.Training;
 import org.springframework.stereotype.Component;

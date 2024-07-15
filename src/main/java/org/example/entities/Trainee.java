@@ -8,15 +8,10 @@ public class Trainee extends User{
     private String address;
     private Long userId;
 
-    public Trainee(LocalDate dateOfBirth, String address, Long userId, String firstName, String lastName , String username, String password, Boolean isActive) {
+    public Trainee(LocalDate dateOfBirth, String address, Long userId) {
         this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.userId = userId;
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
-        this.setPassword(password);
-        this.setUsername(username);
-        this.setActive(isActive);
     }
 
     public LocalDate getDateOfBirth() {
@@ -41,5 +36,14 @@ public class Trainee extends User{
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "Trainee{" +
+                "dateOfBirth=" + dateOfBirth +
+                ", address='" + address + '\'' +
+                ", userId=" + userId +
+                '}';
     }
 }
