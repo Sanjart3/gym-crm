@@ -3,6 +3,7 @@ package org.example.entities;
 import java.time.LocalDate;
 
 public class Training {
+    private Long id;
     private Long traineeId;
     private Long trainerId;
     private String trainingName;
@@ -10,13 +11,22 @@ public class Training {
     private LocalDate trainingDate;
     private int trainingDuration;
 
-    public Training(Long traineeId, Long trainerId, String trainingName, Long trainingType, LocalDate trainingDate, int trainingDuration) {
+    public Training(Long id, Long traineeId, Long trainerId, String trainingName, Long trainingType, LocalDate trainingDate, int trainingDuration) {
+        this.id = id;
         this.traineeId = traineeId;
         this.trainerId = trainerId;
         this.trainingName = trainingName;
         this.trainingType = trainingType;
         this.trainingDate = trainingDate;
         this.trainingDuration = trainingDuration;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getTraineeId() {

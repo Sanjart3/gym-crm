@@ -12,4 +12,5 @@ public interface BaseDao<T> {
     T update(T t);
     Boolean existById(Long id);
     Boolean deleteById(Long id);
+    Long getLastId();
 }

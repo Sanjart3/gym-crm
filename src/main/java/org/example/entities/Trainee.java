@@ -2,16 +2,25 @@ package org.example.entities;
 
 import java.time.LocalDate;
 
-public class Trainee extends User{
-
+public class Trainee {
+    private Long id;
     private LocalDate dateOfBirth;
     private String address;
     private Long userId;
 
-    public Trainee(LocalDate dateOfBirth, String address, Long userId) {
+    public Trainee(Long id, LocalDate dateOfBirth, String address, Long userId) {
+        this.id = id;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.userId = userId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDate getDateOfBirth() {

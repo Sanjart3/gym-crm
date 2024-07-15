@@ -6,16 +6,16 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 @Component
 public class DataSource {
-    private static Map<Long, User> users = new HashMap<>();
-    private static Map<Long, Trainee> trainees = new HashMap<>();
-    private static Map<Long, Trainer> trainers = new HashMap<>();
-    private static Map<Long, Training> trainings = new HashMap<>();
-    private static Map<Long, TrainingType> trainingTypes = new HashMap<>();
+    private static Map<Long, User> users = new TreeMap<>();
+    private static Map<Long, Trainee> trainees = new TreeMap<>();
+    private static Map<Long, Trainer> trainers = new TreeMap<>();
+    private static Map<Long, Training> trainings = new TreeMap<>();
+    private static Map<Long, TrainingType> trainingTypes = new TreeMap<>();
     private static final String USER_FILE = "src/main/resources/User.txt";
     private static final String TRAINING_TYPES_FILE = "src/main/resources/TrainingType.txt";
     private static final String TRAINERS_FILE = "src/main/resources/Trainer.txt";
@@ -85,7 +85,7 @@ public class DataSource {
                 String[] dobEntity = entity[2].split("-");
                 LocalDate dob = LocalDate.of(Integer.parseInt(dobEntity[0]), Integer.parseInt(dobEntity[1]), Integer.parseInt(dobEntity[2]));
                 String address = entity[3];
-                Trainee trainee = new Trainee(dob, address, userId);
+                Trainee trainee = new Trainee(id, dob, address, userId);
                 trainees.put(id, trainee);
             }
         } catch (FileNotFoundException fe){
@@ -105,7 +105,7 @@ public class DataSource {
                 Long id = Long.parseLong(entity[0]);
                 Long userId = Long.parseLong(entity[1]);
                 Long specialization = Long.parseLong(entity[2]);
-                Trainer trainer = new Trainer(userId, specialization);
+                Trainer trainer = new Trainer(id, userId, specialization);
                 trainers.put(id, trainer);
             }
         } catch (FileNotFoundException e){
@@ -138,5 +138,25 @@ public class DataSource {
         } catch (IOException ie){
             ie.printStackTrace();
         }
+    }
+
+    public Map<Long, User> getUsers() {
+        return users;
+    }
+
+    public Map<Long, Trainee> getTrainees() {
+        return trainees;
+    }
+
+    public Map<Long, Trainer> getTrainers() {
+        return trainers;
+    }
+
+    public Map<Long, Training> getTrainings() {
+        return trainings;
+    }
+
+    public Map<Long, TrainingType> getTrainingTypes() {
+        return trainingTypes;
     }
 }

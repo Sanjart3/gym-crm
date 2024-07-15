@@ -1,13 +1,23 @@
 package org.example.entities;
 
-public class Trainer extends User{
+public class Trainer {
 
+    private Long id;
     private Long specialization; //TrainingType id
     private Long userId;
 
-    public Trainer(Long specialization, Long userId) {
+    public Trainer(Long id, Long specialization, Long userId) {
+        this.id = id;
         this.specialization = specialization;
         this.userId = userId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getSpecialization() {
