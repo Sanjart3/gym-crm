@@ -2,10 +2,7 @@ package org.example;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.entities.Trainee;
-import org.example.entities.Trainer;
-import org.example.entities.TrainingType;
-import org.example.entities.User;
+import org.example.entities.*;
 import org.example.services.impl.*;
 import org.springframework.stereotype.Controller;
 
@@ -57,6 +54,15 @@ public class Facade {
         logger.info("--------------------------------------------");
     }
 
+    public void readAllTrainings(){
+        List<Training> trainings = trainingService.findAll();
+        logger.info("These are pre-constructed Trainings:");
+        for (Training training : trainings) {
+            logger.info(training.toString());
+        }
+        logger.info("---------------------------------------------");
+    }
+
     public void readAllTrainingTypes(){
         List<TrainingType> trainingTypes = trainingTypeService.findAll();
         logger.info("These are pre-constructed TrainingTypes:");
@@ -64,6 +70,13 @@ public class Facade {
             logger.info(trainingType.toString());
         }
         logger.info("---------------------------------------------");
+    }
+
+    public void createUser(){
+        User user = new User("Sanjar", null, true);
+        userService.save(user);
+        logger.info("-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|");
+        logger.info(userService.findAll().toString());
     }
 
 }

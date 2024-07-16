@@ -25,7 +25,9 @@ public class DataSource {
 
     private static PasswordGenerator passwordGenerator;
     @Autowired
-    public void setPasswordGenerator(PasswordGenerator passwordGenerator) {}
+    public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
+        this.passwordGenerator = passwordGenerator;
+    }
 
     @PostConstruct
     public void init() {

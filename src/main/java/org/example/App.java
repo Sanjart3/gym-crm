@@ -1,9 +1,20 @@
 package org.example;
 
-public class App 
+import org.example.config.MyAppConfig;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        ApplicationContext context = new AnnotationConfigApplicationContext(MyAppConfig.class);
+        Facade facade = context.getBean(Facade.class);
+        facade.readAllUsers();
+        facade.readAllTrainees();
+        facade.readAllTrainers();
+        facade.readAllTrainings();
+        facade.readAllTrainingTypes();
+        facade.createUser();
     }
 }

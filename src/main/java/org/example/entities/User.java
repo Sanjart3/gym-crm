@@ -20,6 +20,12 @@ public class User {
         this.isActive = isActive;
     }
 
+    public User(String firstName, String lastName, Boolean isActive) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.isActive = isActive;
+    }
+
     public User() {
 
     }
