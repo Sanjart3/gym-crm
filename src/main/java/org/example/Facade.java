@@ -73,7 +73,7 @@ public class Facade {
     }
 
     public void createUser(){
-        User user = new User("Sanjar", null, true);
+        User user = new User("Sanjar", "Totliboyev", true);
         userService.save(user);
         logger.info("-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|");
         logger.info(userService.findAll().toString());

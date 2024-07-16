@@ -4,6 +4,7 @@ import org.example.dao.BaseDao;
 import org.example.entities.User;
 import org.example.utils.DataSource;
 import org.example.utils.PasswordGenerator;
+import org.example.utils.UserNameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,15 @@ public class UserDAO implements BaseDao<User> {
 
     private DataSource dataSource;
     private PasswordGenerator passwordGenerator;
-
+    private UserNameGenerator userNameGenerator;
+    @Autowired
+    public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
+        this.passwordGenerator = passwordGenerator;
+    }
+    @Autowired
+    public void setUserNameGenerator(UserNameGenerator userNameGenerator) {
+        this.userNameGenerator = userNameGenerator;
+    }
     @Autowired
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -41,7 +50,7 @@ public class UserDAO implements BaseDao<User> {
     public User create(User user) {
         Long id = getLastId()+1;
         user.setId(id);
-        String username = generateUserName(user.getFirstName()+"."+user.getLastName());
+        String username = userNameGenerator.generate(user.getFirstName(), user.getLastName());
         String password = passwordGenerator.generatePassword();
         user.setUsername(username);
         user.setPassword(password);
@@ -78,20 +87,4 @@ public class UserDAO implements BaseDao<User> {
         return lastId;
     }
 
-    public String generateUserName(String username){
-        Map<Long, User> userMap = dataSource.getUsers();
-        int serialNum = 1;
-        for (User user:userMap.values()) {
-            if (user.getUsername().equals(username)) {
-                serialNum++;
-            }
-        }
-        username+=serialNum;
-        return username;
-    }
-
-    @Autowired
-    public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
-        this.passwordGenerator = passwordGenerator;
-    }
 }

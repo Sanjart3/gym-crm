@@ -24,9 +24,14 @@ public class DataSource {
     private static final String TRAININGS_FILE = "src/main/resources/Training.txt";
 
     private static PasswordGenerator passwordGenerator;
+    private static UserNameGenerator userNameGenerator;
     @Autowired
     public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
         this.passwordGenerator = passwordGenerator;
+    }
+    @Autowired
+    public void setUserNameGenerator(UserNameGenerator userNameGenerator) {
+        this.userNameGenerator = userNameGenerator;
     }
 
     @PostConstruct
@@ -48,7 +53,7 @@ public class DataSource {
                 Long id = Long.parseLong(entity[0]);
                 String firstName = entity[1];
                 String lastName = entity[2];
-                String username = firstName+"."+lastName;
+                String username = userNameGenerator.generate(firstName, lastName);
                 String password = passwordGenerator.generatePassword();
                 Boolean isActive = entity[3].toLowerCase().equals("true");
                 User user = new User(id, firstName, lastName, username, password, isActive);

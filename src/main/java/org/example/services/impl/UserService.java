@@ -23,14 +23,12 @@ public class UserService implements BaseService<User> {
 
     @Override
     public List<User> findAll() {
-        List<User> users = userDAO.readAll();
-        return users;
+        return userDAO.readAll();
     }
 
     @Override
     public User findById(Long id) {
-        User user = userDAO.readById(id);
-        return user;
+        return userDAO.readById(id);
     }
 
     @Override
