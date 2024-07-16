@@ -5,6 +5,7 @@ import org.example.entities.User;
 import org.example.utils.DataSource;
 import org.example.utils.PasswordGenerator;
 import org.example.utils.UserNameGenerator;
+import org.example.utils.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -63,8 +64,11 @@ public class UserDAO implements BaseDao<User> {
     public User update(User user) {
         Long id = user.getId();
         Map<Long, User> userMap = dataSource.getUsers();
-        userMap.put(id, user);
-        return user;
+        if (userMap.containsKey(id)) {
+            userMap.put(id, user);
+            return user;
+        }
+        throw new UserNotFoundException("User not found");
     }
 
     @Override
@@ -76,14 +80,17 @@ public class UserDAO implements BaseDao<User> {
     @Override
     public Boolean deleteById(Long id) {
         Map<Long, User> userMap = dataSource.getUsers();
-        userMap.remove(id);
-        return true;
+        if (userMap.containsKey(id)) {
+            userMap.remove(id);
+            return true;
+        }
+        throw new UserNotFoundException("User with id " + id + " not found");
     }
 
     @Override
     public Long getLastId() {
-        TreeMap<Long, User> users = (TreeMap<Long, User>) dataSource.getUsers();
-        Long lastId = users.lastKey();
+        TreeMap<Long, User> userMap = (TreeMap<Long, User>) dataSource.getUsers();
+        Long lastId = userMap.lastKey();
         return lastId;
     }
 

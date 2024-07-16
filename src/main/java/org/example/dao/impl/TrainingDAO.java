@@ -3,6 +3,7 @@ package org.example.dao.impl;
 import org.example.dao.BaseDao;
 import org.example.entities.Training;
 import org.example.utils.DataSource;
+import org.example.utils.exception.TrainingNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -48,7 +49,7 @@ public class TrainingDAO implements BaseDao<Training> {
             trainingMap.put(id, training);
             return trainingMap.get(id);
         }
-        throw new RuntimeException();
+        throw new TrainingNotFoundException("Training not found");
     }
 
     @Override
@@ -60,11 +61,11 @@ public class TrainingDAO implements BaseDao<Training> {
     @Override
     public Boolean deleteById(Long id) {
         Map<Long, Training> trainingMap = dataSource.getTrainings();
-        if (existById(id)){
+        if (trainingMap.containsKey(id)){
             trainingMap.remove(id);
             return true;
         }
-        return false;
+        throw new TrainingNotFoundException("Training with id " + id + " not found");
     }
 
     @Override

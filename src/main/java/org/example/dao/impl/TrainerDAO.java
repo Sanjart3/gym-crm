@@ -3,6 +3,7 @@ package org.example.dao.impl;
 import org.example.dao.BaseDao;
 import org.example.entities.Trainer;
 import org.example.utils.DataSource;
+import org.example.utils.exception.TrainerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -44,11 +45,11 @@ public class TrainerDAO implements BaseDao<Trainer> {
     public Trainer update(Trainer trainer) {
         Map<Long, Trainer> trainerMap = dataSource.getTrainers();
         Long id = trainer.getId();
-        if (existById(id)){
+        if (trainerMap.containsKey(id)){
             trainerMap.put(id, trainer);
             return trainerMap.get(id);
         }
-        throw new RuntimeException();
+        throw new TrainerNotFoundException("Trainer not found");
     }
 
     @Override
@@ -60,11 +61,11 @@ public class TrainerDAO implements BaseDao<Trainer> {
     @Override
     public Boolean deleteById(Long id) {
         Map<Long, Trainer> trainerMap = dataSource.getTrainers();
-        if (existById(id)) {
+        if (trainerMap.containsKey(id)) {
             trainerMap.remove(id);
             return true;
         }
-        return false;
+        throw new TrainerNotFoundException("Trainer with id " + id + " not found");
     }
 
     @Override

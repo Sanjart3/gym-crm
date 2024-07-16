@@ -3,6 +3,8 @@ package org.example.dao.impl;
 import org.example.dao.BaseDao;
 import org.example.entities.TrainingType;
 import org.example.utils.DataSource;
+import org.example.utils.exception.TrainingNotFoundException;
+import org.example.utils.exception.TrainingTypeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -46,8 +48,11 @@ public class TrainingTypeDAO implements BaseDao<TrainingType> {
     public TrainingType update(TrainingType trainingType) {
         Long id = trainingType.getId();
         Map<Long, TrainingType> trainingTypeMap = dataSource.getTrainingTypes();
-        trainingTypeMap.put(id, trainingType);
-        return trainingType;
+        if (trainingTypeMap.containsKey(id)) {
+            trainingTypeMap.put(id, trainingType);
+            return trainingType;
+        }
+        throw new TrainingNotFoundException("Training Type Not Found");
     }
 
     @Override
@@ -59,8 +64,11 @@ public class TrainingTypeDAO implements BaseDao<TrainingType> {
     @Override
     public Boolean deleteById(Long id) {
         Map<Long, TrainingType> trainingTypeMap = dataSource.getTrainingTypes();
-        trainingTypeMap.remove(id);
-        return true;
+        if (trainingTypeMap.containsKey(id)) {
+            trainingTypeMap.remove(id);
+            return true;
+        }
+        throw new TrainingTypeNotFoundException("Training type with id " + id + " not found");
     }
 
     @Override

@@ -4,6 +4,7 @@ package org.example.dao.impl;
 import org.example.dao.BaseDao;
 import org.example.entities.Trainee;
 import org.example.utils.DataSource;
+import org.example.utils.exception.TraineeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -48,8 +49,11 @@ public class TraineeDAO implements BaseDao<Trainee> {
     public Trainee update(Trainee trainee) {
         Long id = trainee.getId();
         Map<Long, Trainee> allTrainee = dataSource.getTrainees();
-        allTrainee.put(id, trainee);
-        return trainee;
+        if (allTrainee.containsKey(id)) {
+            allTrainee.put(id, trainee);
+            return trainee;
+        }
+        throw new TraineeNotFoundException("Trainee not found");
     }
 
     @Override
@@ -60,18 +64,18 @@ public class TraineeDAO implements BaseDao<Trainee> {
 
     @Override
     public Boolean deleteById(Long id) {
-        Map<Long, Trainee> allTrainee = dataSource.getTrainees();
-        if (allTrainee.containsKey(id)) {
-            allTrainee.remove(id);
+        Map<Long, Trainee> traineeMap = dataSource.getTrainees();
+        if (traineeMap.containsKey(id)) {
+            traineeMap.remove(id);
             return true;
         }
-        throw new RuntimeException();
+        throw new TraineeNotFoundException("Trainee with id " + id + " not found");
     }
 
     @Override
     public Long getLastId() {
-        TreeMap<Long, Trainee> allTrainee = (TreeMap) dataSource.getTrainees();
-        Long lastId = allTrainee.lastKey();
+        TreeMap<Long, Trainee> traineeMap = (TreeMap) dataSource.getTrainees();
+        Long lastId = traineeMap.lastKey();
         return lastId;
     }
 
