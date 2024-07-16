@@ -4,6 +4,7 @@ package org.example.dao.impl;
 import org.example.dao.BaseDao;
 import org.example.entities.Trainee;
 import org.example.utils.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -14,9 +15,10 @@ import java.util.TreeMap;
 @Repository
 public class TraineeDAO implements BaseDao<Trainee> {
 
-    private final DataSource dataSource;
+    private DataSource dataSource;
 
-    public TraineeDAO(DataSource dataSource) {
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -68,8 +70,9 @@ public class TraineeDAO implements BaseDao<Trainee> {
 
     @Override
     public Long getLastId() {
-        Long id = (Long) ((TreeMap) dataSource.getTrainees()).lastKey();
-        return id;
+        TreeMap<Long, Trainee> allTrainee = (TreeMap) dataSource.getTrainees();
+        Long lastId = allTrainee.lastKey();
+        return lastId;
     }
 
 }

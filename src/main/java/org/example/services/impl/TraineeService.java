@@ -11,12 +11,8 @@ import java.util.List;
 @Service
 public class TraineeService implements BaseService<Trainee> {
 
-    private final TraineeDAO traineeDAO;
-
     @Autowired
-    public TraineeService(TraineeDAO traineeDAO) {
-        this.traineeDAO = traineeDAO;
-    }
+    private TraineeDAO traineeDAO;
 
 
     @Override

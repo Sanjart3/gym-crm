@@ -3,16 +3,17 @@ package org.example.services.impl;
 import org.example.dao.impl.TrainerDAO;
 import org.example.entities.Trainer;
 import org.example.services.BaseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class TrainerService implements BaseService<Trainer> {
 
-    private final TrainerDAO trainerDAO;
+    @Autowired
+    private TrainerDAO trainerDAO;
 
-    public TrainerService(TrainerDAO trainerDAO) {
-        this.trainerDAO = trainerDAO;
-    }
 
     @Override
     public List<Trainer> findAll() {

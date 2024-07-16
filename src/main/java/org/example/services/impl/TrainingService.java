@@ -11,12 +11,8 @@ import java.util.List;
 @Service
 public class TrainingService implements BaseService<Training> {
 
-    private final TrainingDAO trainingDAO;
-
     @Autowired
-    public TrainingService(TrainingDAO trainingDAO) {
-        this.trainingDAO = trainingDAO;
-    }
+    private TrainingDAO trainingDAO;
 
     @Override
     public List<Training> findAll() {

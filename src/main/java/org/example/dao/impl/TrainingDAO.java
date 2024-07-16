@@ -3,17 +3,18 @@ package org.example.dao.impl;
 import org.example.dao.BaseDao;
 import org.example.entities.Training;
 import org.example.utils.DataSource;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 
-@Component
+@Repository
 public class TrainingDAO implements BaseDao<Training> {
 
-    private final DataSource dataSource;
+    private DataSource dataSource;
 
-    public TrainingDAO(DataSource dataSource) {
+    @Autowired
+    public void setDatasource(DataSource dataSource){
         this.dataSource = dataSource;
     }
 
@@ -69,6 +70,7 @@ public class TrainingDAO implements BaseDao<Training> {
     @Override
     public Long getLastId() {
         TreeMap<Long, Training> trainings = (TreeMap) dataSource.getTrainings();
-        return trainings.lastKey();
+        Long lastId = trainings.lastKey();
+        return lastId;
     }
 }

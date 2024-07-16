@@ -46,7 +46,7 @@ public class DataSource {
                 String username = firstName+"."+lastName;
                 String password = passwordGenerator.generatePassword();
                 Boolean isActive = entity[3].toLowerCase().equals("true");
-                User user = new User(firstName, lastName, username, password, isActive);
+                User user = new User(id, firstName, lastName, username, password, isActive);
                 users.put(id, user);
             }
         } catch (Exception e){
@@ -63,7 +63,7 @@ public class DataSource {
                 String[] entity = line.split(":");
                 Long id = Long.parseLong(entity[0]);
                 String name = entity[1];
-                TrainingType trainingType = new TrainingType(name);
+                TrainingType trainingType = new TrainingType(id, name);
                 trainingTypes.put(id, trainingType);
             }
         } catch (FileNotFoundException e){
@@ -130,7 +130,7 @@ public class DataSource {
                 String[] trainingDateVals = entity[5].split("-");
                 LocalDate trainingDate = LocalDate.of(Integer.parseInt(trainingDateVals[0]), Integer.parseInt(trainingDateVals[1]), Integer.parseInt(trainingDateVals[2]));
                 Integer trainingPeriod = Integer.valueOf(entity[6]);
-                Training training = new Training(traineeId, trainerId, trainingName, trainingType, trainingDate, trainingPeriod);
+                Training training = new Training(id, traineeId, trainerId, trainingName, trainingType, trainingDate, trainingPeriod);
                 trainings.put(id, training);
             }
         } catch (FileNotFoundException e){
