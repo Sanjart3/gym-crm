@@ -1,9 +1,12 @@
 package org.example.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Set;
 
+@Component
 public class PasswordGenerator {
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+=<>?";
     private static final SecureRandom RANDOM = new SecureRandom();

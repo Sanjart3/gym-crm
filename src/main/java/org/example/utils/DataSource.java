@@ -1,6 +1,7 @@
 package org.example.utils;
 
 import org.example.entities.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -22,7 +23,9 @@ public class DataSource {
     private static final String TRAINEE_FILE = "src/main/resources/Trainee.txt";
     private static final String TRAININGS_FILE = "src/main/resources/Training.txt";
 
-    private static PasswordGenerator passwordGenerator = new PasswordGenerator();
+    private static PasswordGenerator passwordGenerator;
+    @Autowired
+    public void setPasswordGenerator(PasswordGenerator passwordGenerator) {}
 
     @PostConstruct
     public void init() {
