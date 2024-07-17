@@ -52,7 +52,7 @@ public class TrainingTypeDAO implements BaseDao<TrainingType> {
             trainingTypeMap.put(id, trainingType);
             return trainingType;
         }
-        throw new TrainingNotFoundException("Training Type Not Found");
+        throw new TrainingTypeNotFoundException(id);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class TrainingTypeDAO implements BaseDao<TrainingType> {
             trainingTypeMap.remove(id);
             return true;
         }
-        throw new TrainingTypeNotFoundException("Training type with id " + id + " not found");
+        throw new TrainingTypeNotFoundException(id);
     }
 
     @Override

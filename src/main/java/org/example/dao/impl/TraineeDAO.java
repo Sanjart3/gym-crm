@@ -53,7 +53,7 @@ public class TraineeDAO implements BaseDao<Trainee> {
             allTrainee.put(id, trainee);
             return trainee;
         }
-        throw new TraineeNotFoundException("Trainee not found");
+        throw new TraineeNotFoundException(id);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class TraineeDAO implements BaseDao<Trainee> {
             traineeMap.remove(id);
             return true;
         }
-        throw new TraineeNotFoundException("Trainee with id " + id + " not found");
+        throw new TraineeNotFoundException(id);
     }
 
     @Override

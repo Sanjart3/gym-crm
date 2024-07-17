@@ -68,7 +68,7 @@ public class UserDAO implements BaseDao<User> {
             userMap.put(id, user);
             return user;
         }
-        throw new UserNotFoundException("User not found");
+        throw new UserNotFoundException(id);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class UserDAO implements BaseDao<User> {
             userMap.remove(id);
             return true;
         }
-        throw new UserNotFoundException("User with id " + id + " not found");
+        throw new UserNotFoundException(id);
     }
 
     @Override

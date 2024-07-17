@@ -49,7 +49,7 @@ public class TrainerDAO implements BaseDao<Trainer> {
             trainerMap.put(id, trainer);
             return trainerMap.get(id);
         }
-        throw new TrainerNotFoundException("Trainer not found");
+        throw new TrainerNotFoundException(id);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class TrainerDAO implements BaseDao<Trainer> {
             trainerMap.remove(id);
             return true;
         }
-        throw new TrainerNotFoundException("Trainer with id " + id + " not found");
+        throw new TrainerNotFoundException(id);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.example.utils.exception;
 
 public class TraineeNotFoundException extends RuntimeException {
-    public TraineeNotFoundException(String message) {
-        super(message);
+    public TraineeNotFoundException(Long traineeId) {
+        super("Trainee with id " + traineeId + " not found");
     }
 }
