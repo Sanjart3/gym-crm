@@ -9,6 +9,9 @@ public class TrainingType {
         this.name = name;
     }
 
+    public TrainingType() {
+    }
+
     public Long getId() {
         return id;
     }

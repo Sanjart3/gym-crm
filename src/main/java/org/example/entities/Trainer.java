@@ -12,6 +12,9 @@ public class Trainer {
         this.userId = userId;
     }
 
+    public Trainer() {
+    }
+
     public Long getId() {
         return id;
     }
