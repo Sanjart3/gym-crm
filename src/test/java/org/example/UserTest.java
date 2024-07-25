@@ -51,13 +51,15 @@ public class UserTest {
     @Test
     public void testSaveWithInvalidParams() {
 
-        User user = new User();
+        User user = new User("Sanjar", "Totliboyev", true);
 
-        when(userValidation.isValidForCreate(user)).thenReturn(false);
+//        when(userValidation.isValidForCreate(user)).thenReturn(false);
 
         ValidatorException exception = assertThrows(ValidatorException.class, () -> {
             userService.save(user);
         });
+
+        exception.getMessage();
 
         verify(userValidation, times(1)).isValidForCreate(user);
         verify(userDAO, never()).create(any(User.class));
