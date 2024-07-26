@@ -53,7 +53,7 @@ public class UserTest {
 
         User user = new User("Sanjar", "Totliboyev", true);
 
-//        when(userValidation.isValidForCreate(user)).thenReturn(false);
+        when(userValidation.isValidForCreate(user)).thenReturn(false);
 
         ValidatorException exception = assertThrows(ValidatorException.class, () -> {
             userService.save(user);
