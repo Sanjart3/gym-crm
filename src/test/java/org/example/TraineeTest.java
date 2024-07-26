@@ -3,7 +3,7 @@ package org.example;
 import org.example.config.MyAppConfig;
 import org.example.dao.impl.TraineeDAO;
 import org.example.entities.Trainee;
-import org.example.services.impl.TraineeService;
+import org.example.services.TraineeService;
 import org.example.utils.validation.impl.TraineeValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,7 @@
-package org.example.services.impl;
+package org.example.services;
 
 import org.example.dao.impl.TrainerDAO;
 import org.example.entities.Trainer;
-import org.example.services.BaseService;
 import org.example.utils.exception.ValidatorException;
 import org.example.utils.validation.impl.TrainerValidation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class TrainerService implements BaseService<Trainer> {
+public class TrainerService{
 
     @Autowired
     private TrainerDAO trainerDAO;
@@ -21,19 +20,16 @@ public class TrainerService implements BaseService<Trainer> {
         this.trainerValidation = trainerValidation;
     }
 
-    @Override
     public List<Trainer> findAll() {
         List<Trainer> trainers = trainerDAO.readAll();
         return trainers;
     }
 
-    @Override
     public Trainer findById(Long id) {
         Trainer trainer = trainerDAO.readById(id);
         return trainer;
     }
 
-    @Override
     public Trainer save(Trainer trainer) {
         if (trainerValidation.isValidForCreate(trainer)){
             Trainer savedTrainer = trainerDAO.create(trainer);
@@ -43,7 +39,6 @@ public class TrainerService implements BaseService<Trainer> {
         }
     }
 
-    @Override
     public Trainer update(Trainer trainer) {
         if (trainerValidation.isValidForUpdate(trainer)){
             Trainer savedTrainer = trainerDAO.update(trainer);
@@ -51,10 +46,5 @@ public class TrainerService implements BaseService<Trainer> {
         } else {
             throw new ValidatorException("Invalid trainer to update");
         }
-    }
-
-    @Override
-    public Boolean delete(Long id) {
-        return trainerDAO.deleteById(id);
     }
 }
