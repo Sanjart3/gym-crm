@@ -9,13 +9,18 @@ import java.util.List;
 public class UserNameGenerator {
     private static List<String> usernames = new ArrayList<>();
     public String generate(String firstName, String lastName) {
-        String username = firstName+"."+lastName;
-        String finalUsername;
-        long id = usernames.stream()
-                .filter(object->object.startsWith(username))
-                .count()+1;
-        finalUsername = username+id;
-        usernames.add(finalUsername);
-        return username+id;
+        String fullName = firstName+"."+lastName;
+        long id = numberOfUsernames(fullName);
+        String username;
+        if (id==0) username = fullName;
+        else username = fullName + "_" + (id+1);
+        usernames.add(username);
+        return username;
+    }
+
+    public long numberOfUsernames(String fullName) {
+        return usernames.stream()
+                .filter(object->object.startsWith(fullName))
+                .count();
     }
 }
