@@ -1,20 +1,25 @@
 package org.example.dto;
 
-import java.time.LocalDate;
-
-public class TraineeSignUpRequest {
+public class TrainerRequest {
+    private Long id;
     private String firstName;
     private String lastName;
     private Boolean isActive;
-    private LocalDate dateOfBirth;
-    private String address;
+    private Long trainingTypeId;
 
-    public TraineeSignUpRequest(String firstName, String lastName, Boolean isActive, LocalDate dateOfBirth, String address) {
+    public TrainerRequest(Long id, String firstName, String lastName, Boolean isActive, Long trainingTypeId) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.isActive = isActive;
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
+        this.trainingTypeId = trainingTypeId;
+    }
+
+    public TrainerRequest(String firstName, String lastName, Boolean isActive, Long trainingTypeId) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.isActive = isActive;
+        this.trainingTypeId = trainingTypeId;
     }
 
     public String getFirstName() {
@@ -41,19 +46,11 @@ public class TraineeSignUpRequest {
         isActive = active;
     }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
+    public Long getTrainingTypeId() {
+        return trainingTypeId;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setTrainingTypeId(Long trainingTypeId) {
+        this.trainingTypeId = trainingTypeId;
     }
 }
