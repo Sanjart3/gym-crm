@@ -1,7 +1,7 @@
 package org.example.services;
 
 import org.example.dao.impl.TraineeDAO;
-import org.example.dto.TraineeSignUpRequest;
+import org.example.dto.TraineeRequest;
 import org.example.entities.Trainee;
 import org.example.entities.User;
 import org.example.utils.exception.ValidatorException;
@@ -22,6 +22,10 @@ public class TraineeService{
     public void setTraineeValidation(TraineeValidation traineeValidation) {
         this.traineeValidation = traineeValidation;
     }
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     public List<Trainee> findAll() {
         List<Trainee> trainees = traineeDAO.readAll();
@@ -33,8 +37,10 @@ public class TraineeService{
         return trainee;
     }
 
-    public Trainee save(TraineeSignUpRequest traineeRequest) {
-        Trainee trainee = getTrainee(traineeRequest);
+    public Trainee save(TraineeRequest traineeRequest) {
+        User user = getUser(traineeRequest);
+        User savedUser = userService.save(user);
+        Trainee trainee = getTrainee(traineeRequest, savedUser);
         if (traineeValidation.isValidForCreate(trainee)){
             Trainee savedTrainee = traineeDAO.create(trainee);
             return savedTrainee;
@@ -43,7 +49,10 @@ public class TraineeService{
         }
     }
 
-    public Trainee update(Trainee trainee) {
+    public Trainee update(TraineeRequest traineeRequest) {
+        User user = getUser(traineeRequest);
+        User updatedUser = userService.update(user);
+        Trainee trainee = getTrainee(traineeRequest, updatedUser);
         if (traineeValidation.isValidForUpdate(trainee)){
             Trainee savedTrainee = traineeDAO.update(trainee);
             return savedTrainee;
@@ -56,17 +65,16 @@ public class TraineeService{
         return traineeDAO.deleteById(id);
     }
 
-    public Trainee getTrainee(TraineeSignUpRequest traineeRequest) {
-        User user = getUser(traineeRequest);
+    public Trainee getTrainee(TraineeRequest traineeRequest, User user) {
         Trainee trainee = new Trainee(traineeRequest.getDateOfBirth(), traineeRequest.getAddress(), user.getId());
         return trainee;
     }
 
-    public User getUser(TraineeSignUpRequest traineeRequest) {
+    public User getUser(TraineeRequest traineeRequest) {
         String firstName = traineeRequest.getFirstName();
         String lastName = traineeRequest.getLastName();
         Boolean isActive = traineeRequest.getActive();
         User user = new User(firstName, lastName, isActive);
-        return userService.save(user);
+        return user;
     }
 }
