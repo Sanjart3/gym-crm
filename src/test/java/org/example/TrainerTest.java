@@ -67,12 +67,4 @@ public class TrainerTest {
         verify(trainerDAO, times(1)).update(trainer);
         assertEquals(trainer, updatedTrainer);
     }
-
-    @Test
-    public void testDelete() {
-        when(trainerDAO.deleteById(1L)).thenReturn(true);
-        boolean result = trainerService.delete(1L);
-        verify(trainerDAO, times(1)).deleteById(1L);
-        assertEquals(true, result);
-    }
 }

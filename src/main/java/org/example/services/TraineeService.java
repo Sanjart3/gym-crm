@@ -1,7 +1,9 @@
 package org.example.services;
 
 import org.example.dao.impl.TraineeDAO;
+import org.example.dto.TraineeSignUpRequest;
 import org.example.entities.Trainee;
+import org.example.entities.User;
 import org.example.utils.exception.ValidatorException;
 import org.example.utils.validation.impl.TraineeValidation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ public class TraineeService{
 
     @Autowired
     private TraineeDAO traineeDAO;
+    private UserService userService;
     private TraineeValidation traineeValidation;
     @Autowired
     public void setTraineeValidation(TraineeValidation traineeValidation) {
@@ -30,7 +33,8 @@ public class TraineeService{
         return trainee;
     }
 
-    public Trainee save(Trainee trainee) {
+    public Trainee save(TraineeSignUpRequest traineeRequest) {
+        Trainee trainee = getTrainee(traineeRequest);
         if (traineeValidation.isValidForCreate(trainee)){
             Trainee savedTrainee = traineeDAO.create(trainee);
             return savedTrainee;
@@ -50,5 +54,19 @@ public class TraineeService{
 
     public Boolean delete(Long id) {
         return traineeDAO.deleteById(id);
+    }
+
+    public Trainee getTrainee(TraineeSignUpRequest traineeRequest) {
+        User user = getUser(traineeRequest);
+        Trainee trainee = new Trainee(traineeRequest.getDateOfBirth(), traineeRequest.getAddress(), user.getId());
+        return trainee;
+    }
+
+    public User getUser(TraineeSignUpRequest traineeRequest) {
+        String firstName = traineeRequest.getFirstName();
+        String lastName = traineeRequest.getLastName();
+        Boolean isActive = traineeRequest.getActive();
+        User user = new User(firstName, lastName, isActive);
+        return userService.save(user);
     }
 }

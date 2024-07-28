@@ -12,8 +12,10 @@ import java.util.List;
 @Service
 public class UserService {
 
+    @Autowired
     private UserDAO userDAO;
     private UserValidation userValidation;
+    @Autowired
     public void setUserValidation(UserValidation userValidation) {
         this.userValidation = userValidation;
     }

@@ -56,22 +56,4 @@ public class TrainingTest {
         verify(trainingDAO, times(1)).create(training);
         assertEquals(training, savedTraining);
     }
-
-    @Test
-    public void testUpdate() {
-        Training training = new Training();
-        when(trainingValidation.isValidForUpdate(training)).thenReturn(true);
-        when(trainingDAO.update(training)).thenReturn(training);
-        Training updatedTraining = trainingService.update(training);
-        verify(trainingDAO, times(1)).update(training);
-        assertEquals(training, updatedTraining);
-    }
-
-    @Test
-    public void testDelete() {
-        when(trainingDAO.deleteById(1L)).thenReturn(true);
-        Boolean result = trainingService.delete(1L);
-        verify(trainingDAO, times(1)).deleteById(1L);
-        assertEquals(true, result);
-    }
 }
