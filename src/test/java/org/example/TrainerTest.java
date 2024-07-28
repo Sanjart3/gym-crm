@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.dao.impl.TrainerDAO;
 import org.example.entities.Trainer;
-import org.example.services.impl.TrainerService;
+import org.example.services.TrainerService;
 import org.example.utils.validation.impl.TrainerValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,13 +66,5 @@ public class TrainerTest {
         Trainer updatedTrainer = trainerService.update(trainer);
         verify(trainerDAO, times(1)).update(trainer);
         assertEquals(trainer, updatedTrainer);
-    }
-
-    @Test
-    public void testDelete() {
-        when(trainerDAO.deleteById(1L)).thenReturn(true);
-        boolean result = trainerService.delete(1L);
-        verify(trainerDAO, times(1)).deleteById(1L);
-        assertEquals(true, result);
     }
 }

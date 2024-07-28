@@ -15,6 +15,12 @@ public class Trainee {
         this.userId = userId;
     }
 
+    public Trainee(LocalDate dateOfBirth, String address, Long userId) {
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+        this.userId = userId;
+    }
+
     public Long getId() {
         return id;
     }
