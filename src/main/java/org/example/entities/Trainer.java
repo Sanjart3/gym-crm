@@ -12,6 +12,11 @@ public class Trainer {
         this.userId = userId;
     }
 
+    public Trainer(Long specialization, Long userId) {
+        this.specialization = specialization;
+        this.userId = userId;
+    }
+
     public Trainer() {
     }
 
