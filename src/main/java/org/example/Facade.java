@@ -9,6 +9,7 @@ import org.example.services.impl.TrainingServiceImpl;
 import org.example.services.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -69,6 +70,13 @@ public class Facade {
         userService.save(user);
         logger.info("-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|");
         logger.info(userService.findAll().toString());
+    }
+
+    public void createTrainee(){
+        Trainee trainee = new Trainee(LocalDate.of(2004,3,9), "Tashkent", 7l);
+        traineeService.save(trainee);
+        logger.info("-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|");
+        logger.info(traineeService.findAll().toString());
     }
 
 }
