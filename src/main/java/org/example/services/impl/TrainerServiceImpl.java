@@ -43,10 +43,9 @@ public class TrainerServiceImpl implements TrainerService {
             Trainer savedTrainer = trainerDAO.create(trainer);
             LOGGER.info("Saved trainer " + savedTrainer);
             return savedTrainer;
-        } else {
-            LOGGER.warn("Invalid trainer to save: " + trainer);
-            throw new ValidatorException("Invalid trainer to create");
         }
+        LOGGER.warn("Invalid trainer to save: " + trainer);
+        throw new ValidatorException("Invalid trainer to create");
     }
 
     @Override
@@ -56,10 +55,9 @@ public class TrainerServiceImpl implements TrainerService {
                 Trainer savedTrainer = trainerDAO.update(trainer);
                 LOGGER.info("Updated trainer " + savedTrainer);
                 return savedTrainer;
-            } else {
-                LOGGER.warn("Invalid trainer to update: " + trainer);
-                throw new ValidatorException("Invalid trainer to update");
             }
+            LOGGER.warn("Invalid trainer to update: " + trainer);
+            throw new ValidatorException("Invalid trainer to update");
         }
         LOGGER.error("Trainer with id: {} not found", trainer.getId());
         throw new TrainerNotFoundException(trainer.getId());
