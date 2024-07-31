@@ -3,7 +3,7 @@ package org.example;
 import org.example.config.MyAppConfig;
 import org.example.dao.impl.TraineeDAO;
 import org.example.entities.Trainee;
-import org.example.services.TraineeService;
+import org.example.services.impl.TraineeServiceImpl;
 import org.example.utils.validation.impl.TraineeValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class TraineeTest {
     @Mock
     private TraineeDAO traineeDAO;
     @InjectMocks
-    private TraineeService traineeService;
+    private TraineeServiceImpl traineeService;
     @Mock
     private TraineeValidation traineeValidation;
 

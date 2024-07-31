@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.dao.impl.UserDAO;
 import org.example.entities.User;
-import org.example.services.UserService;
+import org.example.services.impl.UserServiceImpl;
 import org.example.utils.exception.ValidatorException;
 import org.example.utils.validation.impl.UserValidation;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,7 @@ public class UserTest {
     @Mock
     private UserDAO userDAO;
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
     @Mock
     private UserValidation userValidation;
 

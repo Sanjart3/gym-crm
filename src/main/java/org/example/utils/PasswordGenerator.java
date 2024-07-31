@@ -11,12 +11,13 @@ public class PasswordGenerator {
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+=<>?";
     private static final SecureRandom RANDOM = new SecureRandom();
     private static final Set<String> existingPasswords = new HashSet<>();
+    private static final Integer PASSWORD_LENGTH = 10;
 
     public String generatePassword() {
-        StringBuilder password = new StringBuilder(10);
+        StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
 
         while (true) {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < PASSWORD_LENGTH; i++) {
                 password.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
             }
 
