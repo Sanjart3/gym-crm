@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.dao.impl.TrainingDAO;
 import org.example.entities.Training;
-import org.example.services.TrainingService;
+import org.example.services.impl.TrainingServiceImpl;
 import org.example.utils.validation.impl.TrainingValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ public class TrainingTest {
     @Mock
     private TrainingDAO trainingDAO;
     @InjectMocks
-    private TrainingService trainingService;
+    private TrainingServiceImpl trainingService;
     @Mock
     private TrainingValidation trainingValidation;
 
