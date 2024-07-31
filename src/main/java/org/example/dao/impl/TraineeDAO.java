@@ -4,7 +4,6 @@ package org.example.dao.impl;
 import org.example.dao.BaseDao;
 import org.example.entities.Trainee;
 import org.example.utils.DataSource;
-import org.example.utils.exception.TraineeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

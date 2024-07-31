@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.example.dao.impl.TrainerDAO;
 import org.example.entities.Trainer;
 import org.example.services.TrainerService;
+import org.example.utils.exception.TrainerNotFoundException;
 import org.example.utils.exception.ValidatorException;
 import org.example.utils.validation.impl.TrainerValidation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,19 +41,27 @@ public class TrainerServiceImpl implements TrainerService {
     public Trainer save(Trainer trainer) {
         if (trainerValidation.isValidForCreate(trainer)){
             Trainer savedTrainer = trainerDAO.create(trainer);
+            LOGGER.info("Saved trainer " + savedTrainer);
             return savedTrainer;
         } else {
+            LOGGER.warn("Invalid trainer to save: " + trainer);
             throw new ValidatorException("Invalid trainer to create");
         }
     }
 
     @Override
     public Trainer update(Trainer trainer) {
-        if (trainerValidation.isValidForUpdate(trainer)){
-            Trainer savedTrainer = trainerDAO.update(trainer);
-            return savedTrainer;
-        } else {
-            throw new ValidatorException("Invalid trainer to update");
+        if (trainerDAO.existById(trainer.getId())) {
+            if (trainerValidation.isValidForUpdate(trainer)){
+                Trainer savedTrainer = trainerDAO.update(trainer);
+                LOGGER.info("Updated trainer " + savedTrainer);
+                return savedTrainer;
+            } else {
+                LOGGER.warn("Invalid trainer to update: " + trainer);
+                throw new ValidatorException("Invalid trainer to update");
+            }
         }
+        LOGGER.error("Trainer with id: {} not found", trainer.getId());
+        throw new TrainerNotFoundException(trainer.getId());
     }
 }
