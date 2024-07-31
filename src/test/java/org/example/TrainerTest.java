@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.dao.impl.TrainerDAO;
 import org.example.entities.Trainer;
-import org.example.services.TrainerService;
+import org.example.services.impl.TrainerService;
 import org.example.utils.validation.impl.TrainerValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

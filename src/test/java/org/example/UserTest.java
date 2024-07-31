@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.dao.impl.UserDAO;
 import org.example.entities.User;
-import org.example.services.UserService;
+import org.example.services.impl.UserService;
 import org.example.utils.exception.ValidatorException;
 import org.example.utils.validation.impl.UserValidation;
 import org.junit.jupiter.api.BeforeEach;

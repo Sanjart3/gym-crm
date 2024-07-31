@@ -1,7 +1,8 @@
-package org.example.services;
+package org.example.services.impl;
 
 import org.example.dao.impl.UserDAO;
 import org.example.entities.User;
+import org.example.services.BaseService;
 import org.example.utils.exception.ValidatorException;
 import org.example.utils.validation.impl.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService implements BaseService<User> {
 
     @Autowired
     private UserDAO userDAO;
@@ -20,14 +21,17 @@ public class UserService {
         this.userValidation = userValidation;
     }
 
+    @Override
     public List<User> findAll() {
         return userDAO.readAll();
     }
 
+    @Override
     public User findById(Long id) {
         return userDAO.readById(id);
     }
 
+    @Override
     public User save(User user) {
         if (userValidation.isValidForCreate(user)){
             User savedUser = userDAO.create(user);
@@ -37,6 +41,7 @@ public class UserService {
         }
     }
 
+    @Override
     public User update(User user) {
         if (userValidation.isValidForUpdate(user)){
             return userDAO.update(user);
@@ -45,6 +50,7 @@ public class UserService {
         }
     }
 
+    @Override
     public Boolean delete(Long id) {
         return userDAO.deleteById(id);
     }
