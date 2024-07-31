@@ -1,8 +1,11 @@
 package org.example.services.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.dao.impl.UserDAO;
 import org.example.entities.User;
 import org.example.services.UserService;
+import org.example.utils.exception.UserNotFoundException;
 import org.example.utils.exception.ValidatorException;
 import org.example.utils.validation.impl.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
     @Autowired
     private UserDAO userDAO;
     private UserValidation userValidation;
@@ -35,23 +39,36 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
         if (userValidation.isValidForCreate(user)){
             User savedUser = userDAO.create(user);
+            LOGGER.info("Saved user: {}", savedUser);
             return savedUser;
-        } else{
-            throw new ValidatorException("Invalid user to create");
         }
+        LOGGER.warn("Invalid user to create: {}", user);
+        throw new ValidatorException("Invalid user to create");
     }
 
     @Override
     public User update(User user) {
-        if (userValidation.isValidForUpdate(user)){
-            return userDAO.update(user);
-        } else {
+        if (userDAO.existById(user.getId())) {
+            if (userValidation.isValidForUpdate(user)){
+                User updatedUser = userDAO.update(user);
+                LOGGER.info("Updated user: {}", updatedUser);
+                return updatedUser;
+            }
+            LOGGER.warn("Invalid user to update: {}", user);
             throw new ValidatorException("Invalid user to update!");
         }
+        LOGGER.error("User with id {} not found", user.getId());
+        throw new UserNotFoundException(user.getId());
     }
 
     @Override
     public Boolean delete(Long id) {
-        return userDAO.deleteById(id);
+        if (userDAO.existById(id)){
+            userDAO.deleteById(id);
+            LOGGER.info("Deleted user: {}", id);
+            return true;
+        }
+        LOGGER.error("User with id {} not found", id);
+        throw new UserNotFoundException(id);
     }
 }

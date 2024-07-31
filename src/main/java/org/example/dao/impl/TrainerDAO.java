@@ -45,11 +45,8 @@ public class TrainerDAO implements BaseDao<Trainer> {
     public Trainer update(Trainer trainer) {
         Map<Long, Trainer> trainerMap = dataSource.getTrainers();
         Long id = trainer.getId();
-        if (trainerMap.containsKey(id)){
-            trainerMap.put(id, trainer);
-            return trainerMap.get(id);
-        }
-        throw new TrainerNotFoundException(id);
+        trainerMap.put(id, trainer);
+        return trainerMap.get(id);
     }
 
     @Override

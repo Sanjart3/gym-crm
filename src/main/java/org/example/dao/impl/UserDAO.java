@@ -64,11 +64,8 @@ public class UserDAO implements BaseDao<User> {
     public User update(User user) {
         Long id = user.getId();
         Map<Long, User> userMap = dataSource.getUsers();
-        if (userMap.containsKey(id)) {
-            userMap.put(id, user);
-            return user;
-        }
-        throw new UserNotFoundException(id);
+        userMap.put(id, user);
+        return user;
     }
 
     @Override
@@ -80,11 +77,8 @@ public class UserDAO implements BaseDao<User> {
     @Override
     public Boolean deleteById(Long id) {
         Map<Long, User> userMap = dataSource.getUsers();
-        if (userMap.containsKey(id)) {
-            userMap.remove(id);
-            return true;
-        }
-        throw new UserNotFoundException(id);
+        userMap.remove(id);
+        return true;
     }
 
     @Override

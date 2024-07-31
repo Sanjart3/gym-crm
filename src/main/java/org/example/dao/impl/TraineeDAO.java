@@ -4,7 +4,6 @@ package org.example.dao.impl;
 import org.example.dao.BaseDao;
 import org.example.entities.Trainee;
 import org.example.utils.DataSource;
-import org.example.utils.exception.TraineeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -49,11 +48,8 @@ public class TraineeDAO implements BaseDao<Trainee> {
     public Trainee update(Trainee trainee) {
         Long id = trainee.getId();
         Map<Long, Trainee> allTrainee = dataSource.getTrainees();
-        if (allTrainee.containsKey(id)) {
-            allTrainee.put(id, trainee);
-            return trainee;
-        }
-        throw new TraineeNotFoundException(id);
+        allTrainee.put(id, trainee);
+        return trainee;
     }
 
     @Override
@@ -65,11 +61,8 @@ public class TraineeDAO implements BaseDao<Trainee> {
     @Override
     public Boolean deleteById(Long id) {
         Map<Long, Trainee> traineeMap = dataSource.getTrainees();
-        if (traineeMap.containsKey(id)) {
-            traineeMap.remove(id);
-            return true;
-        }
-        throw new TraineeNotFoundException(id);
+        traineeMap.remove(id);
+        return true;
     }
 
     @Override
