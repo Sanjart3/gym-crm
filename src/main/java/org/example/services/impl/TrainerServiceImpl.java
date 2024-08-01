@@ -55,9 +55,9 @@ public class TrainerServiceImpl implements TrainerService {
         if (trainerDAO.existById(trainer.getId())) {
             try {
                 trainerValidation.isValidForUpdate(trainer);  //checks for validation, and throws exception for invalid parameters
-                Trainer savedTrainer = trainerDAO.update(trainer);
-                LOGGER.info("Updated trainer " + savedTrainer);
-                return savedTrainer;
+                Trainer updatedTrainer = trainerDAO.update(trainer);
+                LOGGER.info("Updated trainer " + updatedTrainer);
+                return updatedTrainer;
             } catch (ValidatorException e){
                 LOGGER.warn("Invalid trainer to update: " + trainer, e);
                 throw e;

@@ -39,7 +39,7 @@ public class TraineeServiceImpl implements TraineeService {
             traineeValidation.isValidForCreate(trainee);  //checks for validation, and throws exception for invalid parameters
             Trainee createdTrainee = traineeDAO.create(trainee);
             LOGGER.info("Trainee created: {}", createdTrainee);
-            return traineeDAO.create(trainee);
+            return createdTrainee;
         } catch (ValidatorException e) {
             LOGGER.warn("Trainee not created: {}", trainee, e);
             throw e;
@@ -53,7 +53,7 @@ public class TraineeServiceImpl implements TraineeService {
                 traineeValidation.isValidForUpdate(trainee); //checks for validation, and throws exception for invalid parameters
                 Trainee updatedTrainee = traineeDAO.update(trainee);
                 LOGGER.info("Trainee updated: {}", updatedTrainee);
-                return traineeDAO.update(trainee);
+                return updatedTrainee;
             }catch (ValidatorException e) {
                 LOGGER.warn("Trainee not updated: {}", trainee, e);
                 throw e;
