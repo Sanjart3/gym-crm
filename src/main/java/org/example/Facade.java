@@ -68,15 +68,23 @@ public class Facade {
     public void createUser(){
         User user = new User("Sanjar", "Totliboyev", true);
         userService.save(user);
-        logger.info("-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|");
-        logger.info(userService.findAll().toString());
+        User secondUser = new User("Ali", "Aliyev", true);
+        userService.save(secondUser);
     }
 
     public void createTrainee(){
-        Trainee trainee = new Trainee(LocalDate.of(2004,3,9), null, 7l);
+        Trainee trainee = new Trainee(LocalDate.of(2004,3,9), "Samarkhand", 7l);
         traineeService.save(trainee);
-        logger.info("-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|");
-        logger.info(traineeService.findAll().toString());
+    }
+
+    public void createTrainer(){
+        Trainer trainer = new Trainer(2l, 8l);
+        trainerService.save(trainer);
+    }
+
+    public void createTraining(){
+        Training training = new Training(3l, 2l, "Kuchamala", 2l, LocalDate.of(2024, 9, 01), 60);
+        trainingService.save(training);
     }
 
 }

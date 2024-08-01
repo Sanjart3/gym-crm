@@ -16,5 +16,7 @@ public class App
         facade.readAllTrainings();
         facade.createUser();
         facade.createTrainee();
+        facade.createTrainer();
+        facade.createTraining();
     }
 }
