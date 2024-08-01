@@ -38,12 +38,14 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public Training save(Training training) {
-        if (trainingValidation.isValidForCreate(training)){
+        try{
+            trainingValidation.isValidForCreate(training);  //checks for validation, and throws exception for invalid parameters
             Training savedTraining = trainingDAO.create(training);
             LOGGER.info("Saved training: {}", savedTraining);
             return savedTraining;
+        } catch (ValidatorException e) {
+            LOGGER.warn("Invalid training: {}", training, e);
+            throw e;
         }
-        LOGGER.warn("Invalid training: {}", training);
-        throw new ValidatorException("Invalid Training to create");
     }
 }
