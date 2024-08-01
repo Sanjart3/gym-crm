@@ -73,7 +73,7 @@ public class Facade {
     }
 
     public void createTrainee(){
-        Trainee trainee = new Trainee(LocalDate.of(2004,3,9), "Tashkent", 7l);
+        Trainee trainee = new Trainee(LocalDate.of(2004,3,9), null, 7l);
         traineeService.save(trainee);
         logger.info("-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|");
         logger.info(traineeService.findAll().toString());
