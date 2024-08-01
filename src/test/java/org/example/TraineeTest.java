@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class TraineeTest {
 
     @Test
     public void testSave() {
-        Trainee trainee = null;
+        Trainee trainee = new Trainee(LocalDate.of(2003,12,24), "Samarkhand", 3l);
         when(traineeValidation.isValidForCreate(trainee)).thenReturn(true);
         when(traineeDAO.create(trainee)).thenReturn(trainee);
 
