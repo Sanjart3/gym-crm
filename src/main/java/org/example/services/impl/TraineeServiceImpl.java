@@ -35,26 +35,29 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public Trainee save(Trainee trainee) {
-        if (traineeValidation.isValidForCreate(trainee)) {
+        try {
+            traineeValidation.isValidForCreate(trainee);  //checks for validation, and throws exception for invalid parameters
             Trainee createdTrainee = traineeDAO.create(trainee);
             LOGGER.info("Trainee created: {}", createdTrainee);
             return traineeDAO.create(trainee);
-        } else {
-            LOGGER.warn("Trainee not created: {}", trainee);
-            throw new ValidatorException("Invalid trainee to create");
+        } catch (ValidatorException e) {
+            LOGGER.warn("Trainee not created: {}", trainee, e);
+            throw e;
         }
     }
 
     @Override
     public Trainee update(Trainee trainee) {
         if (traineeDAO.existById(trainee.getId())) {
-            if (traineeValidation.isValidForUpdate(trainee)) {
+            try{
+                traineeValidation.isValidForUpdate(trainee); //checks for validation, and throws exception for invalid parameters
                 Trainee updatedTrainee = traineeDAO.update(trainee);
                 LOGGER.info("Trainee updated: {}", updatedTrainee);
                 return traineeDAO.update(trainee);
+            }catch (ValidatorException e) {
+                LOGGER.warn("Trainee not updated: {}", trainee, e);
+                throw e;
             }
-            LOGGER.warn("Trainee not updated: {}", trainee);
-            throw new ValidatorException("Invalid trainee to update");
         }
         LOGGER.error("Trainee not found with id: {}", trainee.getId());
         throw new TraineeNotFoundException(trainee.getId());

@@ -37,25 +37,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        if (userValidation.isValidForCreate(user)){
+        try {
+            userValidation.isValidForCreate(user); //checks for validation, and throws exception for invalid parameters
             User savedUser = userDAO.create(user);
             LOGGER.info("Saved user: {}", savedUser);
             return savedUser;
+        } catch (ValidatorException e) {
+            LOGGER.warn("Invalid user to create: {}", user, e);
+            throw e;
         }
-        LOGGER.warn("Invalid user to create: {}", user);
-        throw new ValidatorException("Invalid user to create");
     }
 
     @Override
     public User update(User user) {
         if (userDAO.existById(user.getId())) {
-            if (userValidation.isValidForUpdate(user)){
+            try{
+                userValidation.isValidForUpdate(user);  //checks for validation, and throws exception for invalid parameters
                 User updatedUser = userDAO.update(user);
                 LOGGER.info("Updated user: {}", updatedUser);
                 return updatedUser;
+            } catch (ValidatorException e) {
+                LOGGER.warn("Invalid user to update: {}", user, e);
+                throw e;
             }
-            LOGGER.warn("Invalid user to update: {}", user);
-            throw new ValidatorException("Invalid user to update!");
         }
         LOGGER.error("User with id {} not found", user.getId());
         throw new UserNotFoundException(user.getId());
