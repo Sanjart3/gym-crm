@@ -1,24 +1,36 @@
 package org.example.entities;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "trainees")
 public class Trainee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
+    @Column(name = "address")
     private String address;
-    private Long userId;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public Trainee(Long id, LocalDate dateOfBirth, String address, Long userId) {
+    public Trainee(Long id, LocalDate dateOfBirth, String address, User user) {
         this.id = id;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
-        this.userId = userId;
+        this.user = user;
     }
 
-    public Trainee(LocalDate dateOfBirth, String address, Long userId) {
+    public Trainee(LocalDate dateOfBirth, String address, User user) {
         this.dateOfBirth = dateOfBirth;
         this.address = address;
-        this.userId = userId;
+        this.user = user;
+    }
+
+    public Trainee() {
     }
 
     public Long getId() {
@@ -45,12 +57,12 @@ public class Trainee {
         this.address = address;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User userId) {
+        this.user = userId;
     }
 
     @Override
@@ -58,7 +70,7 @@ public class Trainee {
         return "Trainee{" +
                 "dateOfBirth=" + dateOfBirth +
                 ", address='" + address + '\'' +
-                ", userId=" + userId +
+                ", userId=" + user +
                 '}';
     }
 }

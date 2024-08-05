@@ -1,20 +1,28 @@
 package org.example.entities;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "trainers")
 public class Trainer {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "specialization", nullable = false)
     private Long specialization; //TrainingType id
-    private Long userId;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public Trainer(Long id, Long specialization, Long userId) {
+    public Trainer(Long id, Long specialization, User user) {
         this.id = id;
         this.specialization = specialization;
-        this.userId = userId;
+        this.user = user;
     }
 
-    public Trainer(Long specialization, Long userId) {
+    public Trainer(Long specialization, User user) {
         this.specialization = specialization;
-        this.userId = userId;
+        this.user = user;
     }
 
     public Trainer() {
@@ -36,19 +44,19 @@ public class Trainer {
         this.specialization = specialization;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User userId) {
+        this.user = userId;
     }
 
     @Override
     public String toString() {
         return "Trainer{" +
                 "specialization=" + specialization +
-                ", userId=" + userId +
+                ", user=" + user +
                 '}';
     }
 }

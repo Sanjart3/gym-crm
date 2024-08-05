@@ -1,7 +1,14 @@
 package org.example.entities;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "training_type")
 public class TrainingType {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "name", nullable = false)
     private String name;
 
     public TrainingType(Long id, String name) {

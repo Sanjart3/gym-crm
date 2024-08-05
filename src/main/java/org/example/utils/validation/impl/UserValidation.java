@@ -13,7 +13,7 @@ public class UserValidation implements Validator<User> {
             throw new ValidatorException("First name is required!");
         } else if (user.getLastName() == null) {
             throw new ValidatorException("Last name is required!");
-        } else if (user.getActive() == null) {
+        } else if (user.getIsActive() == null) {
             throw new ValidatorException("Active status is required!");
         }
         return true;
@@ -29,7 +29,7 @@ public class UserValidation implements Validator<User> {
             throw new ValidatorException("Last name is required!");
         } else if (user.getUsername()==null) {
             throw new ValidatorException("username is required!");
-        } else if (user.getActive() == null) {
+        } else if (user.getIsActive() == null) {
             throw new ValidatorException("Active status is required!");
         } else if (user.getPassword() == null) {
             throw new ValidatorException("Password is required!");

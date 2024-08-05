@@ -73,18 +73,18 @@ public class Facade {
     }
 
     public void createTrainee(){
-        Trainee trainee = new Trainee(LocalDate.of(2004,3,9), "Samarkhand", 7l);
-        traineeService.save(trainee);
+//        Trainee trainee = new Trainee(LocalDate.of(2004,3,9), "Samarkhand", 7l);
+//        traineeService.save(trainee);
     }
 
     public void createTrainer(){
-        Trainer trainer = new Trainer(2l, 8l);
-        trainerService.save(trainer);
+//        Trainer trainer = new Trainer(2l, 8l);
+//        trainerService.save(trainer);
     }
 
     public void createTraining(){
-        Training training = new Training(3l, 2l, "Kuchamala", 2l, LocalDate.of(2024, 9, 01), 60);
-        trainingService.save(training);
+//        Training training = new Training(3l, 2l, "Kuchamala", 2l, LocalDate.of(2024, 9, 01), 60);
+//        trainingService.save(training);
     }
 
 }
