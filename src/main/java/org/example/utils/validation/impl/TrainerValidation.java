@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class TrainerValidation implements Validator<Trainer> {
     @Override
     public Boolean isValidForCreate(Trainer trainer) {
-        if (trainer.getUserId()==null){
+        if (trainer.getUser()==null){
             throw new ValidatorException("User is required!");
         } else if (trainer.getSpecialization()==null) {
             throw new ValidatorException("Specialization is required!");
@@ -21,7 +21,7 @@ public class TrainerValidation implements Validator<Trainer> {
     public Boolean isValidForUpdate(Trainer trainer) {
         if (trainer.getId()==null){
             throw new ValidatorException("Id is required!");
-        } else if (trainer.getUserId()==null){
+        } else if (trainer.getUser()==null){
             throw new ValidatorException("User is required!");
         } else if (trainer.getSpecialization()==null){
             throw new ValidatorException("Specialization is required!");

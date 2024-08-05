@@ -84,25 +84,25 @@ public class DataSource {
     }
 
     private static void initTrainee() {
-        try {
-            File file = new File(TRAINEE_FILE);
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = reader.readLine())!=null){
-                String[] entity = line.split(":");
-                Long id = Long.parseLong(entity[0]);
-                Long userId = Long.parseLong(entity[1]);
-                String[] dobEntity = entity[2].split("-");
-                LocalDate dob = LocalDate.of(Integer.parseInt(dobEntity[0]), Integer.parseInt(dobEntity[1]), Integer.parseInt(dobEntity[2]));
-                String address = entity[3];
-                Trainee trainee = new Trainee(id, dob, address, userId);
-                trainees.put(id, trainee);
-            }
-        } catch (FileNotFoundException fe){
-            fe.printStackTrace();
-        } catch (IOException ie){
-            ie.printStackTrace();
-        }
+//        try {
+//            File file = new File(TRAINEE_FILE);
+//            BufferedReader reader = new BufferedReader(new FileReader(file));
+//            String line;
+//            while ((line = reader.readLine())!=null){
+//                String[] entity = line.split(":");
+//                Long id = Long.parseLong(entity[0]);
+//                Long userId = Long.parseLong(entity[1]);
+//                String[] dobEntity = entity[2].split("-");
+//                LocalDate dob = LocalDate.of(Integer.parseInt(dobEntity[0]), Integer.parseInt(dobEntity[1]), Integer.parseInt(dobEntity[2]));
+//                String address = entity[3];
+//                Trainee trainee = new Trainee(id, dob, address, userId);
+//                trainees.put(id, trainee);
+//            }
+//        } catch (FileNotFoundException fe){
+//            fe.printStackTrace();
+//        } catch (IOException ie){
+//            ie.printStackTrace();
+//        }
     }
 
     private static void initTrainer() {

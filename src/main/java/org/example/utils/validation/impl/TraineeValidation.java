@@ -14,7 +14,7 @@ public class TraineeValidation implements Validator<Trainee> {
             throw new ValidatorException("Address is required!");
         } else if (trainee.getDateOfBirth()==null) {
             throw new ValidatorException("Date of birth is required!");
-        } else if (trainee.getUserId()==null) {
+        } else if (trainee.getUser()==null) {
             throw new ValidatorException("UserId is required!");
         }
         return true;
@@ -26,7 +26,7 @@ public class TraineeValidation implements Validator<Trainee> {
             throw new ValidatorException("Id is required!");
         } else if (trainee.getDateOfBirth()==null){
             throw new ValidatorException("Date of birth is required!");
-        } else if (trainee.getUserId()==null){
+        } else if (trainee.getUser()==null){
             throw new ValidatorException("UserId is required!");
         } else if (trainee.getAddress()==null){
             throw new ValidatorException("Address is required!");
