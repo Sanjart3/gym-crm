@@ -106,48 +106,48 @@ public class DataSource {
     }
 
     private static void initTrainer() {
-        try {
-            File file = new File(TRAINERS_FILE);
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = reader.readLine())!=null){
-                String[] entity = line.split(":");
-                Long id = Long.parseLong(entity[0]);
-                Long userId = Long.parseLong(entity[1]);
-                Long specialization = Long.parseLong(entity[2]);
-                Trainer trainer = new Trainer(id, userId, specialization);
-                trainers.put(id, trainer);
-            }
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        } catch (IOException ie){
-            ie.printStackTrace();
-        }
+//        try {
+//            File file = new File(TRAINERS_FILE);
+//            BufferedReader reader = new BufferedReader(new FileReader(file));
+//            String line;
+//            while ((line = reader.readLine())!=null){
+//                String[] entity = line.split(":");
+//                Long id = Long.parseLong(entity[0]);
+//                Long userId = Long.parseLong(entity[1]);
+//                Long specialization = Long.parseLong(entity[2]);
+//                Trainer trainer = new Trainer(id, userId, specialization);
+//                trainers.put(id, trainer);
+//            }
+//        } catch (FileNotFoundException e){
+//            e.printStackTrace();
+//        } catch (IOException ie){
+//            ie.printStackTrace();
+//        }
     }
 
     private static void initTraining() {
-        try {
-            File file = new File(TRAININGS_FILE);
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = reader.readLine())!=null){
-                String[] entity = line.split(":");
-                Long id = Long.parseLong(entity[0]);
-                Long traineeId = Long.parseLong(entity[1]);
-                Long trainerId = Long.parseLong(entity[2]);
-                String trainingName = entity[3];
-                Long trainingType = Long.parseLong(entity[4]);
-                String[] trainingDateVals = entity[5].split("-");
-                LocalDate trainingDate = LocalDate.of(Integer.parseInt(trainingDateVals[0]), Integer.parseInt(trainingDateVals[1]), Integer.parseInt(trainingDateVals[2]));
-                Integer trainingPeriod = Integer.valueOf(entity[6]);
-                Training training = new Training(id, traineeId, trainerId, trainingName, trainingType, trainingDate, trainingPeriod);
-                trainings.put(id, training);
-            }
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        } catch (IOException ie){
-            ie.printStackTrace();
-        }
+//        try {
+//            File file = new File(TRAININGS_FILE);
+//            BufferedReader reader = new BufferedReader(new FileReader(file));
+//            String line;
+//            while ((line = reader.readLine())!=null){
+//                String[] entity = line.split(":");
+//                Long id = Long.parseLong(entity[0]);
+//                Long traineeId = Long.parseLong(entity[1]);
+//                Long trainerId = Long.parseLong(entity[2]);
+//                String trainingName = entity[3];
+//                Long trainingType = Long.parseLong(entity[4]);
+//                String[] trainingDateVals = entity[5].split("-");
+//                LocalDate trainingDate = LocalDate.of(Integer.parseInt(trainingDateVals[0]), Integer.parseInt(trainingDateVals[1]), Integer.parseInt(trainingDateVals[2]));
+//                Integer trainingPeriod = Integer.valueOf(entity[6]);
+//                Training training = new Training(id, traineeId, trainerId, trainingName, trainingType, trainingDate, trainingPeriod);
+//                trainings.put(id, training);
+//            }
+//        } catch (FileNotFoundException e){
+//            e.printStackTrace();
+//        } catch (IOException ie){
+//            ie.printStackTrace();
+//        }
     }
 
     public Map<Long, User> getUsers() {
