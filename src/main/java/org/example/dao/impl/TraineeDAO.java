@@ -27,17 +27,18 @@ public class TraineeDAO implements BaseDao<Trainee> {
     }
     @Override
     public List<Trainee> readAll() {
-//        Map<Long, Trainee> allTrainee = dataSource.getTrainees();
-//        return new ArrayList<>(allTrainee.values());
-        return null;
+        Session session = sessionFactory.openSession();
+        List<Trainee> traineeList = session.createQuery("from Trainee").list();
+        session.close();
+        return traineeList;
     }
 
     @Override
     public Trainee readById(Long id) {
-//        Map<Long, Trainee> allTrainee = dataSource.getTrainees();
-//        Trainee trainee = allTrainee.get(id);
-//        return trainee;
-        return null;
+        Session session = sessionFactory.openSession();
+        Trainee trainee = session.get(Trainee.class, id);
+        session.close();
+        return trainee;
     }
 
     @Override

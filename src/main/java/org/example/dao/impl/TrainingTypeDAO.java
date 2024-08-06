@@ -37,11 +37,7 @@ public class TrainingTypeDAO implements BaseDao<TrainingType> {
 
     @Override
     public TrainingType create(TrainingType trainingType) {
-        Long id = getLastId()+1;
-        Map<Long, TrainingType> trainingTypeMap = dataSource.getTrainingTypes();
-        trainingType.setId(id);
-        trainingTypeMap.put(id, trainingType);
-        return trainingType;
+        return null;
     }
 
     @Override

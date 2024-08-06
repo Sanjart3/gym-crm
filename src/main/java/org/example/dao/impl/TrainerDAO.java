@@ -25,17 +25,18 @@ public class TrainerDAO implements BaseDao<Trainer> {
 
     @Override
     public List<Trainer> readAll() {
-//        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
-//        List<Trainer> trainers = new ArrayList<>(trainerMap.values());
-//        return trainers;
-        return null;
+        Session session = sessionFactory.openSession();
+        List<Trainer> trainers = session.createCriteria(Trainer.class).list();
+        session.close();
+        return trainers;
     }
 
     @Override
     public Trainer readById(Long id) {
-//        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
-//        return trainerMap.get(id);
-        return null;
+        Session session = sessionFactory.openSession();
+        Trainer trainer = session.get(Trainer.class, id);
+        session.close();
+        return trainer;
     }
 
     @Override

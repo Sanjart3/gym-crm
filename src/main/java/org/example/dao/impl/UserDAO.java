@@ -39,18 +39,18 @@ public class UserDAO implements BaseDao<User> {
 
     @Override
     public List<User> readAll() {
-//        Map<Long, User> userMap = dataSource.getUsers();
-//        List<User> users = new ArrayList<>(userMap.values());
-//        return users;
-        return null;
+        Session session = sessionFactory.openSession();
+        List<User> users = session.createQuery("from User").list();
+        session.close();
+        return users;
     }
 
     @Override
     public User readById(Long id) {
-//        Map<Long, User> userMap = dataSource.getUsers();
-//        User user = userMap.get(id);
-//        return user;
-        return null;
+        Session session = sessionFactory.openSession();
+        User user = session.get(User.class, id);
+        session.close();
+        return user;
     }
 
     @Override
@@ -101,13 +101,4 @@ public class UserDAO implements BaseDao<User> {
 //        return true;
         return null;
     }
-
-    @Override
-    public Long getLastId() {
-//        TreeMap<Long, User> userMap = (TreeMap<Long, User>) dataSource.getUsers();
-//        Long lastId = userMap.lastKey();
-//        return lastId;
-        return null;
-    }
-
 }
