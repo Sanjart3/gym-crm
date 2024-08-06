@@ -10,13 +10,13 @@ public class App
     {
         ApplicationContext context = new AnnotationConfigApplicationContext(MyAppConfig.class);
         Facade facade = context.getBean(Facade.class);
-        facade.readAllUsers();
-        facade.readAllTrainees();
-        facade.readAllTrainers();
-        facade.readAllTrainings();
-        facade.createUser();
-        facade.createTrainee();
+//        facade.readAllUsers();
+//        facade.readAllTrainees();
+//        facade.readAllTrainers();
+//        facade.readAllTrainings();
+//        facade.createUser();
         facade.createTrainer();
-        facade.createTraining();
+//        facade.createTraining();
+//        facade.createTrainee();
     }
 }

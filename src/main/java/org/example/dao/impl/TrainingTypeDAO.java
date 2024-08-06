@@ -70,11 +70,4 @@ public class TrainingTypeDAO implements BaseDao<TrainingType> {
         }
         throw new TrainingTypeNotFoundException(id);
     }
-
-    @Override
-    public Long getLastId() {
-        TreeMap<Long, TrainingType> trainingTypeMap = (TreeMap) dataSource.getTrainingTypes();
-        Long lastId = trainingTypeMap.lastKey();
-        return lastId;
-    }
 }
