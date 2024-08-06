@@ -3,12 +3,11 @@ package org.example.dao.impl;
 
 import org.example.dao.BaseDao;
 import org.example.entities.Trainee;
-import org.example.utils.DataSource;
+import org.example.utils.exception.TraineeNotFoundException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.service.ServiceRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -78,9 +77,24 @@ public class TraineeDAO implements BaseDao<Trainee> {
 
     @Override
     public Boolean deleteById(Long id) {
-//        Map<Long, Trainee> traineeMap = dataSource.getTrainees();
-//        traineeMap.remove(id);
-//        return true;
-        return null;
+        Session session = sessionFactory.openSession();
+        Trainee trainee = session.get(Trainee.class, id);
+        if (trainee != null) {
+            Transaction transaction = null;
+            boolean deleted = false;
+            try{
+                transaction = session.beginTransaction();
+                session.delete(trainee);
+                transaction.commit();
+                deleted = true;
+            } catch (HibernateException e) {
+                if (transaction != null) transaction.rollback();
+                e.printStackTrace();
+            } finally {
+                session.close();
+            }
+            return deleted;
+        }
+        throw new TraineeNotFoundException(id);
     }
 }

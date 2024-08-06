@@ -79,11 +79,24 @@ public class TrainingDAO implements BaseDao<Training> {
 
     @Override
     public Boolean deleteById(Long id) {
-//        Map<Long, Training> trainingMap = dataSource.getTrainings();
-//        if (trainingMap.containsKey(id)){
-//            trainingMap.remove(id);
-//            return true;
-//        }
+        Session session = sessionFactory.openSession();
+        Training training = session.get(Training.class, id);
+        if (training != null) {
+            Transaction transaction = null;
+            boolean isDeleted = false;
+            try {
+                transaction = session.beginTransaction();
+                session.delete(training);
+                transaction.commit();
+                isDeleted = true;
+            } catch (HibernateException e) {
+                if (transaction != null) transaction.rollback();
+                e.printStackTrace();
+            } finally {
+                session.close();
+            }
+            return isDeleted;
+        }
         throw new TrainingNotFoundException(id);
     }
 }

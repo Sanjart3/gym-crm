@@ -2,7 +2,6 @@ package org.example.dao.impl;
 
 import org.example.dao.BaseDao;
 import org.example.entities.User;
-import org.example.utils.DataSource;
 import org.example.utils.PasswordGenerator;
 import org.example.utils.UserNameGenerator;
 import org.example.utils.exception.UserNotFoundException;
@@ -96,9 +95,24 @@ public class UserDAO implements BaseDao<User> {
 
     @Override
     public Boolean deleteById(Long id) {
-//        Map<Long, User> userMap = dataSource.getUsers();
-//        userMap.remove(id);
-//        return true;
-        return null;
+        Session session = sessionFactory.openSession();
+        User user = session.get(User.class, id);
+        if (user != null) {
+            Transaction transaction = null;
+            boolean deleted = false;
+            try{
+                transaction = session.beginTransaction();
+                session.delete(user);
+                transaction.commit();
+                deleted = true;
+            } catch (HibernateException e) {
+                if (transaction != null) transaction.rollback();
+                e.printStackTrace();
+            } finally {
+                session.close();
+            }
+            return deleted;
+        }
+        throw new UserNotFoundException(id);
     }
 }
