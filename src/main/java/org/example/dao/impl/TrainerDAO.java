@@ -4,6 +4,10 @@ import org.example.dao.BaseDao;
 import org.example.entities.Trainer;
 import org.example.utils.DataSource;
 import org.example.utils.exception.TrainerNotFoundException;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -12,63 +16,85 @@ import java.util.*;
 @Repository
 public class TrainerDAO implements BaseDao<Trainer> {
 
-    private DataSource dataSource;
+    private SessionFactory sessionFactory;
 
     @Autowired
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
     public List<Trainer> readAll() {
-        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
-        List<Trainer> trainers = new ArrayList<>(trainerMap.values());
+        Session session = sessionFactory.openSession();
+        List<Trainer> trainers = session.createCriteria(Trainer.class).list();
+        session.close();
         return trainers;
     }
 
     @Override
     public Trainer readById(Long id) {
-        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
-        return trainerMap.get(id);
+        Session session = sessionFactory.openSession();
+        Trainer trainer = session.get(Trainer.class, id);
+        session.close();
+        return trainer;
     }
 
     @Override
     public Trainer create(Trainer trainer) {
-        Long id = getLastId()+1;
-        trainer.setId(id);
-        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
-        trainerMap.put(id, trainer);
-        return trainerMap.get(id);
+        Session session = sessionFactory.openSession();
+        Transaction transaction = null;
+        Trainer createdTrainer = new Trainer();
+        try{
+            transaction = session.beginTransaction();
+            Long trainerId = (Long) session.save(trainer);
+            transaction.commit();
+            createdTrainer = session.get(Trainer.class, trainerId);
+        } catch (HibernateException e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return createdTrainer;
     }
 
     @Override
     public Trainer update(Trainer trainer) {
-        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
-        Long id = trainer.getId();
-        trainerMap.put(id, trainer);
-        return trainerMap.get(id);
+//        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
+//        Long id = trainer.getId();
+//        trainerMap.put(id, trainer);
+//        return trainerMap.get(id);
+        return null;
     }
 
     @Override
     public Boolean existById(Long id) {
-        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
-        return trainerMap.containsKey(id);
+//        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
+//        return trainerMap.containsKey(id);
+        return null;
     }
 
     @Override
     public Boolean deleteById(Long id) {
-        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
-        if (trainerMap.containsKey(id)) {
-            trainerMap.remove(id);
-            return true;
+        Session session = sessionFactory.openSession();
+        Trainer trainer = session.get(Trainer.class, id);
+        if (trainer != null) {
+            Transaction transaction = null;
+            boolean deleted = false;
+            try{
+                transaction = session.beginTransaction();
+                session.delete(trainer);
+                transaction.commit();
+                deleted = true;
+            } catch (HibernateException e) {
+                if (transaction != null) transaction.rollback();
+                e.printStackTrace();
+            } finally {
+                session.close();
+            }
+            return deleted;
         }
         throw new TrainerNotFoundException(id);
     }
 
-    @Override
-    public Long getLastId() {
-        TreeMap<Long, Trainer> trainerMap = (TreeMap) dataSource.getTrainers();
-        Long lastId = trainerMap.lastKey();
-        return lastId;
-    }
 }
