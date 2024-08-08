@@ -45,9 +45,7 @@ public class TrainerServiceImpl implements TrainerService {
     public Trainer save(Trainer trainer) {
         try{
             trainerValidation.isValidForCreate(trainer);  //checks for validation, and throws exception for invalid parameters
-            User savedUser = userService.save(trainer.getUser());
-            trainer.setUser(savedUser);
-            Trainer savedTrainer = trainerDAO.create(trainer);
+            Trainer savedTrainer = trainerDAO.update(trainer);
             LOGGER.info("Saved trainer " + savedTrainer);
             return savedTrainer;
         } catch (ValidatorException e){

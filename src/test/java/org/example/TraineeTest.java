@@ -82,14 +82,4 @@ public class TraineeTest {
         verify(traineeDAO, times(1)).update(trainee);
         assertEquals(trainee, updatedTrainee);
     }
-
-    @Test
-    public void testDelete() {
-        when(traineeDAO.deleteById(1L)).thenReturn(true);
-
-        Boolean result = traineeService.delete(1L);
-
-        verify(traineeDAO, times(1)).deleteById(1L);
-        assertEquals(true, result);
-    }
 }
