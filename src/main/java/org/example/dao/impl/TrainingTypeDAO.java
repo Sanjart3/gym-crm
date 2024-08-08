@@ -1,9 +1,8 @@
 package org.example.dao.impl;
 
-import org.example.dao.BaseDao;
+import org.example.dao.CRDao;
 import org.example.entities.TrainingType;
 import org.example.utils.DataSource;
-import org.example.utils.exception.TrainingNotFoundException;
 import org.example.utils.exception.TrainingTypeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,10 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 @Repository
-public class TrainingTypeDAO implements BaseDao<TrainingType> {
+public class TrainingTypeDAO implements CRDao<TrainingType> {
 
     private DataSource dataSource;
     @Autowired
@@ -41,29 +39,8 @@ public class TrainingTypeDAO implements BaseDao<TrainingType> {
     }
 
     @Override
-    public TrainingType update(TrainingType trainingType) {
-        Long id = trainingType.getId();
-        Map<Long, TrainingType> trainingTypeMap = dataSource.getTrainingTypes();
-        if (trainingTypeMap.containsKey(id)) {
-            trainingTypeMap.put(id, trainingType);
-            return trainingType;
-        }
-        throw new TrainingTypeNotFoundException(id);
-    }
-
-    @Override
     public Boolean existById(Long id) {
         Map<Long, TrainingType> trainingTypeMap = dataSource.getTrainingTypes();
         return trainingTypeMap.containsKey(id);
-    }
-
-    @Override
-    public Boolean deleteById(Long id) {
-        Map<Long, TrainingType> trainingTypeMap = dataSource.getTrainingTypes();
-        if (trainingTypeMap.containsKey(id)) {
-            trainingTypeMap.remove(id);
-            return true;
-        }
-        throw new TrainingTypeNotFoundException(id);
     }
 }

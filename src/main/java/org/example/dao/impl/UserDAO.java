@@ -1,6 +1,6 @@
 package org.example.dao.impl;
 
-import org.example.dao.BaseDao;
+import org.example.dao.ProfileDao;
 import org.example.entities.User;
 import org.example.utils.PasswordGenerator;
 import org.example.utils.UserNameGenerator;
@@ -12,13 +12,10 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 @Repository
-public class UserDAO implements BaseDao<User> {
+public class UserDAO implements ProfileDao<User> {
 
     private static SessionFactory sessionFactory;
     private PasswordGenerator passwordGenerator;
@@ -94,25 +91,12 @@ public class UserDAO implements BaseDao<User> {
     }
 
     @Override
-    public Boolean deleteById(Long id) {
-        Session session = sessionFactory.openSession();
-        User user = session.get(User.class, id);
-        if (user != null) {
-            Transaction transaction = null;
-            boolean deleted = false;
-            try{
-                transaction = session.beginTransaction();
-                session.delete(user);
-                transaction.commit();
-                deleted = true;
-            } catch (HibernateException e) {
-                if (transaction != null) transaction.rollback();
-                e.printStackTrace();
-            } finally {
-                session.close();
-            }
-            return deleted;
-        }
-        throw new UserNotFoundException(id);
+    public User findByUsername(String username) {
+        return null;
+    }
+
+    @Override
+    public Boolean deleteByUsername(String username) {
+        return null;
     }
 }

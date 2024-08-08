@@ -1,8 +1,7 @@
 package org.example.dao.impl;
 
-import org.example.dao.BaseDao;
+import org.example.dao.ProfileDao;
 import org.example.entities.Trainer;
-import org.example.utils.DataSource;
 import org.example.utils.exception.TrainerNotFoundException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public class TrainerDAO implements BaseDao<Trainer> {
+public class TrainerDAO implements ProfileDao<Trainer> {
 
     private SessionFactory sessionFactory;
 
@@ -75,26 +74,13 @@ public class TrainerDAO implements BaseDao<Trainer> {
     }
 
     @Override
-    public Boolean deleteById(Long id) {
-        Session session = sessionFactory.openSession();
-        Trainer trainer = session.get(Trainer.class, id);
-        if (trainer != null) {
-            Transaction transaction = null;
-            boolean deleted = false;
-            try{
-                transaction = session.beginTransaction();
-                session.delete(trainer);
-                transaction.commit();
-                deleted = true;
-            } catch (HibernateException e) {
-                if (transaction != null) transaction.rollback();
-                e.printStackTrace();
-            } finally {
-                session.close();
-            }
-            return deleted;
-        }
-        throw new TrainerNotFoundException(id);
+    public Trainer findByUsername(String username) {
+        return null;
+    }
+
+    @Override
+    public Boolean deleteByUsername(String username) {
+        return null;
     }
 
 }
