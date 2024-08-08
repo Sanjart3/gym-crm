@@ -9,5 +9,5 @@ public interface TraineeService {
     Trainee findById(Long id);
     Trainee save(Trainee trainee);
     Trainee update(Trainee trainee);
-    Boolean delete(Long id);
+    Boolean delete(String username);
 }

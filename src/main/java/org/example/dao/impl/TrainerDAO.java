@@ -2,7 +2,7 @@ package org.example.dao.impl;
 
 import org.example.dao.ProfileDao;
 import org.example.entities.Trainer;
-import org.example.utils.exception.TrainerNotFoundException;
+import org.example.entities.User;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,8 +10,15 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 import java.util.*;
 
+//TODO select by username
+//TODO authentication
+//TODO criteria
 @Repository
 public class TrainerDAO implements ProfileDao<Trainer> {
 
@@ -59,28 +66,46 @@ public class TrainerDAO implements ProfileDao<Trainer> {
 
     @Override
     public Trainer update(Trainer trainer) {
-//        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
-//        Long id = trainer.getId();
-//        trainerMap.put(id, trainer);
-//        return trainerMap.get(id);
-        return null;
+        Session session = sessionFactory.openSession();
+        Transaction transaction = null;
+        try{
+            transaction = session.beginTransaction();
+            trainer = (Trainer) session.merge(trainer);
+            session.update(trainer);
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return trainer;
     }
 
     @Override
     public Boolean existById(Long id) {
-//        Map<Long, Trainer> trainerMap = dataSource.getTrainers();
-//        return trainerMap.containsKey(id);
-        return null;
+        Session session = sessionFactory.openSession();
+        Trainer trainer = session.get(Trainer.class, id);
+        session.close();
+        return trainer != null;
     }
 
     @Override
     public Trainer findByUsername(String username) {
-        return null;
+        CriteriaBuilder criteriaBuilder = sessionFactory.getCriteriaBuilder();
+        CriteriaQuery<Trainer> criteriaQuery = criteriaBuilder.createQuery(Trainer.class);
+        Root<Trainer> trainerRoot = criteriaQuery.from(Trainer.class);
+        Join<Trainer, User> userJoin = trainerRoot.join("trainer");
+
+        criteriaQuery.where(criteriaBuilder.equal(userJoin.get("username"), username));
+        Trainer trainer = sessionFactory.openSession().createQuery(criteriaQuery).uniqueResult();
+        return trainer;
     }
 
     @Override
     public Boolean deleteByUsername(String username) {
         return null;
     }
+
 
 }

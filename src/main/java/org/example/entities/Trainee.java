@@ -13,7 +13,7 @@ public class Trainee {
     private LocalDate dateOfBirth;
     @Column(name = "address")
     private String address;
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

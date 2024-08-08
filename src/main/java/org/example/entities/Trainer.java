@@ -10,7 +10,7 @@ public class Trainer {
     private Long id;
     @Column(name = "specialization", nullable = false)
     private Long specialization; //TrainingType id
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

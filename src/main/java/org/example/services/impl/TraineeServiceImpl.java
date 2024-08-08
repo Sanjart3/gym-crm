@@ -71,13 +71,12 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public Boolean delete(Long id) {
-        if (traineeDAO.existById(id)){
-            traineeDAO.deleteById(id);
-            LOGGER.info("Trainee deleted: {}", id);
-            return true;
+    public Boolean delete(String username) {
+        try {
+            return traineeDAO.deleteByUsername(username);
+        } catch (TraineeNotFoundException e) {
+            LOGGER.warn("Trainee not found with username: {}", username, e);
+            throw e;
         }
-        LOGGER.warn("Trainee not found: {}", id);
-        throw new TraineeNotFoundException(id);
     }
 }
