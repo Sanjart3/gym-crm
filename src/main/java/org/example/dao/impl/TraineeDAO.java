@@ -5,6 +5,7 @@ import org.example.dao.AbstractProfileDao;
 import org.example.entities.Trainee;
 import org.example.entities.Trainer;
 import org.example.entities.User;
+import org.example.utils.PasswordGenerator;
 import org.example.utils.exception.TraineeNotFoundException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -34,6 +35,11 @@ public class TraineeDAO extends AbstractProfileDao<Trainee> {
     public TraineeDAO(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
+
+    @Autowired
+    public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
+        this.passwordGenerator = passwordGenerator;
+    }
     @Override
     public List<Trainee> readAll() {
         Session session = sessionFactory.openSession();
@@ -48,6 +54,11 @@ public class TraineeDAO extends AbstractProfileDao<Trainee> {
         Trainee trainee = session.get(Trainee.class, id);
         session.close();
         return trainee;
+    }
+
+    @Override
+    public Optional<Trainee> create(Trainee trainee) {
+        return create(trainee, Trainee.class);
     }
 
     @Override

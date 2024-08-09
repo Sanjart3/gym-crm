@@ -9,4 +9,5 @@ public interface ProfileDao<T> extends CRDao<T> {
     Boolean changeStatus(String username, Boolean status);
 
     Boolean changeStatus(String username, Boolean status, Class<T> entityClass);
+    String getUserName(Class<T> entityClass, String baseUsername);
 }
