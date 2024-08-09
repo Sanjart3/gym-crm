@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TraineeServiceImpl implements TraineeService {
@@ -23,6 +24,38 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Autowired
     private TraineeValidation traineeValidation;
+
+    @Override
+    public Trainee findByUsername(String username) {
+        Optional<Trainee> trainee = traineeDAO.findByUsername(username);
+        if (trainee.isPresent()) {
+            return trainee.get();
+        } else {
+            LOGGER.error("Trainee not found");
+            throw new TraineeNotFoundException("Trainee with username " + username + " not found");
+        }
+    }
+
+    @Override
+    public void passwordChange(String username, String newPassword) {
+        Optional<Trainee> trainee = traineeDAO.changePassword(username, newPassword);
+        if (trainee.isPresent()) {
+            LOGGER.info("Password changed successfully!");
+        } else {
+            LOGGER.error("Password change failed!");
+            throw new TraineeNotFoundException("Trainee with username " + username + " not found");
+        }
+    }
+
+    @Override
+    public void changeStatus(String username, boolean status) {
+        boolean trainee = traineeDAO.changeStatus(username, status);
+        if (trainee){
+            LOGGER.info("Trainee status changed successfully!");
+        } else {
+            LOGGER.error("Trainee status change failed!");
+        }
+    }
 
     @Override
     public List<Trainee> findAll() {
@@ -65,7 +98,7 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public Boolean delete(String username) {
+    public Boolean deleteByUsername(String username) {
         try {
             return traineeDAO.deleteByUsername(username);
         } catch (TraineeNotFoundException e) {
@@ -73,6 +106,8 @@ public class TraineeServiceImpl implements TraineeService {
             throw e;
         }
     }
+
+
 
     @Override
     public Trainee addTrainer(Long traineeId, Trainer trainer) {
@@ -93,4 +128,16 @@ public class TraineeServiceImpl implements TraineeService {
             throw e;
         }
     }
+
+    @Override
+    public List<Trainer> findUnassignedTrainers(String username) {
+        try {
+            return traineeDAO.getUnassignedTrainersByTraineeUsername(username);
+        } catch (TraineeNotFoundException e) {
+            LOGGER.warn("Trainee not found with username: {}", username, e);
+            throw e;
+        }
+    }
+
+
 }

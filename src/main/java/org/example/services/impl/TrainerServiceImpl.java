@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TrainerServiceImpl implements TrainerService {
@@ -23,6 +24,38 @@ public class TrainerServiceImpl implements TrainerService {
     @Autowired
     public void setTrainerValidation(TrainerValidation trainerValidation) {
         this.trainerValidation = trainerValidation;
+    }
+
+    @Override
+    public Trainer findByUsername(String username) {
+        try {
+            return trainerDAO.findByUsername(username).get();
+        } catch (TrainerNotFoundException e) {
+            LOGGER.error("Trainer not found", e);
+            throw e;
+        }
+    }
+
+    @Override
+    public void changePassword(String username, String newPassword) {
+        Optional<Trainer> trainer = trainerDAO.changePassword(username, newPassword);
+        if (trainer.isPresent()) {
+            LOGGER.info("Password changed successfully!");
+        } else {
+            LOGGER.error("Password change failed!");
+            throw new ValidatorException("Password change failed!");
+        }
+    }
+
+    @Override
+    public void changeStatus(String username, boolean status) {
+        boolean isChanged = trainerDAO.changeStatus(username, status);
+        if (isChanged){
+            LOGGER.info("Status changed successfully!");
+        } else {
+            LOGGER.error("Status change failed!");
+            throw new ValidatorException("Status change failed!");
+        }
     }
 
     @Override

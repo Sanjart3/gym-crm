@@ -13,28 +13,16 @@ import java.util.List;
 
 @Controller
 public class Facade {
-    private final UserServiceImpl userService;
     private final TraineeServiceImpl traineeService;
     private final TrainerServiceImpl trainerService;
     private final TrainingServiceImpl trainingService;
 
     private final static Logger logger = LogManager.getLogger(Facade.class);
 
-    public Facade(UserServiceImpl userService, TraineeServiceImpl traineeService, TrainerServiceImpl trainerService, TrainingServiceImpl trainingService) {
-        this.userService = userService;
+    public Facade( TraineeServiceImpl traineeService, TrainerServiceImpl trainerService, TrainingServiceImpl trainingService) {
         this.traineeService = traineeService;
         this.trainerService = trainerService;
         this.trainingService = trainingService;
-    }
-
-    public void readAllUsers(){
-        List<User> users = userService.findAll();
-        logger.info("--------------------------------------------");
-        logger.info("These are pre-constructed Users:");
-        for (User user : users) {
-            logger.info(user.toString());
-        }
-        logger.info("--------------------------------------------");
     }
 
     public void readAllTrainees(){
@@ -64,12 +52,12 @@ public class Facade {
         logger.info("---------------------------------------------");
     }
 
-    public void createUser(){
-        User user = new User("Sanjar", "Totliboyev", true);
-        userService.save(user);
-        User secondUser = new User("Ali", "Aliyev", true);
-        userService.save(secondUser);
-    }
+//    public void createUser(){
+//        User user = new User("Sanjar", "Totliboyev", true);
+//        userService.save(user);
+//        User secondUser = new User("Ali", "Aliyev", true);
+//        userService.save(secondUser);
+//    }
 
     public void createTrainee(){
         User user = new User("Sanjar", "Totliboyev", true);
