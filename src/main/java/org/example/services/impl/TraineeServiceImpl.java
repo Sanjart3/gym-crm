@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.dao.impl.TraineeDAO;
 import org.example.entities.Trainee;
+import org.example.entities.Trainer;
 import org.example.services.TraineeService;
 import org.example.utils.exception.TraineeNotFoundException;
 import org.example.utils.exception.ValidatorException;
@@ -69,6 +70,26 @@ public class TraineeServiceImpl implements TraineeService {
             return traineeDAO.deleteByUsername(username);
         } catch (TraineeNotFoundException e) {
             LOGGER.warn("Trainee not found with username: {}", username, e);
+            throw e;
+        }
+    }
+
+    @Override
+    public Trainee addTrainer(Long traineeId, Trainer trainer) {
+        try{
+            return traineeDAO.addTrainerToTrainee(traineeId, trainer).get();
+        } catch (TraineeNotFoundException e) {
+            LOGGER.warn("Trainee not found with id: {}", traineeId, e);
+            throw e;
+        }
+    }
+
+    @Override
+    public Trainee removeTrainer(Long traineeId, Trainer trainer) {
+        try {
+            return traineeDAO.removeTrainerFromTrainee(traineeId, trainer).get();
+        } catch (TraineeNotFoundException e) {
+            LOGGER.warn("Trainee not found with id: {}", traineeId, e);
             throw e;
         }
     }

@@ -2,6 +2,7 @@ package org.example.entities;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "trainees")
@@ -16,6 +17,31 @@ public class Trainee {
     @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "trainer_trainee",
+            joinColumns = @JoinColumn(name = "trainee_id"),
+            inverseJoinColumns = @JoinColumn(name = "trainer_id")
+    )
+    private List<Trainer> trainers;
+
+    public List<Trainer> getTrainers() {
+        return trainers;
+    }
+
+    public void addTrainer(Trainer trainer) {
+        if (this.trainers != null && !this.trainers.contains(trainer)) {
+            this.trainers.add(trainer);
+        }
+    }
+
+    public void removeTrainer(Trainer trainer) {
+        if (this.trainers != null) {
+            this.trainers.remove(trainer);
+        }
+    }
+
 
     public Trainee(Long id, LocalDate dateOfBirth, String address, User user) {
         this.id = id;
