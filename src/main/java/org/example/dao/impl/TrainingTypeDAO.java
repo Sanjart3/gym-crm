@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class TrainingTypeDAO implements CRDao<TrainingType> {
@@ -34,6 +35,11 @@ public class TrainingTypeDAO implements CRDao<TrainingType> {
     }
 
     @Override
+    public Optional<TrainingType> create(Class<TrainingType> t) {
+        return Optional.empty();
+    }
+
+
     public TrainingType create(TrainingType trainingType) {
         return null;
     }

@@ -4,7 +4,6 @@ import org.example.dao.ProfileDao;
 import org.example.entities.User;
 import org.example.utils.PasswordGenerator;
 import org.example.utils.UserNameGenerator;
-import org.example.utils.exception.UserNotFoundException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserDAO implements ProfileDao<User> {
@@ -50,6 +50,10 @@ public class UserDAO implements ProfileDao<User> {
     }
 
     @Override
+    public Optional<User> create(Class<User> t) {
+        return Optional.empty();
+    }
+
     public User create(User user) {
         String username = userNameGenerator.generate(user.getFirstName(), user.getLastName());
         String password = passwordGenerator.generatePassword();

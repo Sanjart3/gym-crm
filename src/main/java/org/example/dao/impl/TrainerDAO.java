@@ -1,6 +1,6 @@
 package org.example.dao.impl;
 
-import org.example.dao.ProfileDao;
+import org.example.dao.AbstractProfileDao;
 import org.example.entities.Trainer;
 import org.example.entities.User;
 import org.hibernate.HibernateException;
@@ -10,23 +10,24 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
 import java.util.*;
 
-//TODO select by username
-//TODO authentication
-//TODO criteria
 @Repository
-public class TrainerDAO implements ProfileDao<Trainer> {
-
-    private SessionFactory sessionFactory;
+public class TrainerDAO extends AbstractProfileDao<Trainer> {
 
     @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public TrainerDAO(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
+
+    @Override
+    public Optional<Trainer> findByUsername(String username) {
+        return findByUsername(username, Trainer.class);
+    }
+
+    @Override
+    public Optional<Trainer> findByUsernameAndPassword(String username, String password) {
+        return findByUsernameAndPassword(username, password, Trainer.class);
     }
 
     @Override
@@ -46,43 +47,6 @@ public class TrainerDAO implements ProfileDao<Trainer> {
     }
 
     @Override
-    public Trainer create(Trainer trainer) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = null;
-        Trainer createdTrainer = new Trainer();
-        try{
-            transaction = session.beginTransaction();
-            Long trainerId = (Long) session.save(trainer);
-            transaction.commit();
-            createdTrainer = session.get(Trainer.class, trainerId);
-        } catch (HibernateException e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return createdTrainer;
-    }
-
-    @Override
-    public Trainer update(Trainer trainer) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = null;
-        try{
-            transaction = session.beginTransaction();
-            trainer = (Trainer) session.merge(trainer);
-            session.update(trainer);
-            transaction.commit();
-        } catch (HibernateException e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return trainer;
-    }
-
-    @Override
     public Boolean existById(Long id) {
         Session session = sessionFactory.openSession();
         Trainer trainer = session.get(Trainer.class, id);
@@ -91,21 +55,35 @@ public class TrainerDAO implements ProfileDao<Trainer> {
     }
 
     @Override
-    public Trainer findByUsername(String username) {
-        CriteriaBuilder criteriaBuilder = sessionFactory.getCriteriaBuilder();
-        CriteriaQuery<Trainer> criteriaQuery = criteriaBuilder.createQuery(Trainer.class);
-        Root<Trainer> trainerRoot = criteriaQuery.from(Trainer.class);
-        Join<Trainer, User> userJoin = trainerRoot.join("trainer");
+    public Optional<Trainer> changePassword(String username, String newPassword) {
+        Optional<Trainer> optionalTrainee = findByUsername(username);
 
-        criteriaQuery.where(criteriaBuilder.equal(userJoin.get("username"), username));
-        Trainer trainer = sessionFactory.openSession().createQuery(criteriaQuery).uniqueResult();
-        return trainer;
+        if (optionalTrainee.isPresent()) {
+            Trainer trainer = optionalTrainee.get();
+            try (Session session = sessionFactory.openSession()) {
+                Transaction transaction = null;
+                try {
+                    transaction = session.beginTransaction();
+                    User user = trainer.getUser();
+                    if (user != null) {
+                        user.setPassword(newPassword);
+                    }
+
+                    session.merge(trainer);
+                    transaction.commit();
+
+                } catch (HibernateException e) {
+                    if (transaction != null) transaction.rollback();
+                    e.printStackTrace();
+                    return Optional.empty();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return Optional.empty();
+            }
+            return Optional.of(trainer);
+        } else {
+            return Optional.empty();
+        }
     }
-
-    @Override
-    public Boolean deleteByUsername(String username) {
-        return null;
-    }
-
-
 }

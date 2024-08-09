@@ -38,6 +38,11 @@ public class TrainingDAO implements CRDao<Training> {
     }
 
     @Override
+    public Optional<Training> create(Class<Training> t) {
+        return Optional.empty();
+    }
+
+
     public Training create(Training training) {
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
