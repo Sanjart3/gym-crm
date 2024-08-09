@@ -3,6 +3,7 @@ package org.example.dao;
 import org.example.entities.Trainee;
 import org.example.entities.Trainer;
 import org.example.entities.User;
+import org.example.utils.PasswordGenerator;
 import org.example.utils.exception.UserNotFoundException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -20,6 +21,7 @@ public abstract class AbstractProfileDao<T> implements ProfileDao<T> {
     private final static String USERNAME_ATTRIBUTE = "username";
     private final static String PASSWORD_ATTRIBUTE = "password";
     protected SessionFactory sessionFactory;
+    protected PasswordGenerator passwordGenerator;
 
     public AbstractProfileDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -30,12 +32,20 @@ public abstract class AbstractProfileDao<T> implements ProfileDao<T> {
 
     public abstract Optional<T> changePassword(String username, String newPassword);
 
-    public Optional<T> create(T entity){
+    public Optional<T> create(T entity, Class<T> entityClass){
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
         T createdEntity = null;
         try{
             transaction = session.beginTransaction();
+            User user = null;
+            if (entity instanceof Trainee) {
+                user = ((Trainee) entity).getUser();
+            } else if (entity instanceof Trainer) {
+                user = ((Trainer) entity).getUser();
+            }
+            user.setUsername(getUserName(entityClass, user.getFirstName()+user.getLastName()));
+            user.setPassword(passwordGenerator.generatePassword());
             session.save(entity);
             transaction.commit();
             session.close();
@@ -170,5 +180,26 @@ public abstract class AbstractProfileDao<T> implements ProfileDao<T> {
         } else {
             throw new UserNotFoundException(username);  // Return empty if the entity was not found
         }
+    }
+
+    @Override
+    public String getUserName(Class<T> entityClass, String baseUsername){
+        String username = baseUsername;
+        CriteriaBuilder criteriaBuilder = sessionFactory.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(entityClass);
+        Root<T> root = criteriaQuery.from(entityClass);
+        Join<T, User> userJoin = root.join(USER_ATTRIBUTE);
+
+        criteriaQuery.where(criteriaBuilder.like(userJoin.get(USERNAME_ATTRIBUTE), baseUsername+"%"));
+
+        Session session = sessionFactory.openSession();
+        int serialNumber = session.createQuery(criteriaQuery).list().size();
+        if (serialNumber>0){
+            username = username+"_"+(serialNumber+1);
+        }
+
+        session.close();
+
+        return username;
     }
 }
