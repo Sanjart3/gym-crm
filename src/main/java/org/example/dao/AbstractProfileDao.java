@@ -1,7 +1,9 @@
 package org.example.dao;
 
 import org.example.entities.Trainee;
+import org.example.entities.Trainer;
 import org.example.entities.User;
+import org.example.utils.exception.UserNotFoundException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -25,6 +27,8 @@ public abstract class AbstractProfileDao<T> implements ProfileDao<T> {
 
     public abstract Optional<T> findByUsername(String username);
     public abstract Optional<T> findByUsernameAndPassword(String username, String password);
+
+    public abstract Optional<T> changePassword(String username, String newPassword);
 
     public Optional<T> create(T entity){
         Session session = sessionFactory.openSession();
@@ -92,10 +96,79 @@ public abstract class AbstractProfileDao<T> implements ProfileDao<T> {
         return Optional.ofNullable(entity);
     }
 
-    public abstract Optional<T> changePassword(String username, String newPassword);
+    public Optional<T> changePassword(String username, String newPassword, Class<T> entityClass) {
+        Optional<T> optionalEntity = findByUsername(username, entityClass);
 
-    @Override
-    public Boolean changeStatus(String username, Boolean status) {
+        if (optionalEntity.isPresent()) {
+            T entity = optionalEntity.get();
+            try (Session session = sessionFactory.openSession()) {
+                Transaction transaction = null;
+                try {
+                    transaction = session.beginTransaction();
+                    User user = null;
+                    if (entity instanceof Trainee) {
+                        user = ((Trainee) entity).getUser();
+                    } else if (entity instanceof Trainer) {
+                        user = ((Trainer) entity).getUser();
+                    }
+                    if (user != null) {
+                        user.setPassword(newPassword);
+                    }
+                    session.merge(entity);  // Merge the updated entity
+                    transaction.commit();
 
+                } catch (HibernateException e) {
+                    if (transaction != null) transaction.rollback();
+                    e.printStackTrace();
+                    return Optional.empty();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return Optional.empty();
+            }
+            return Optional.ofNullable(entity);
+        } else {
+            throw new UserNotFoundException(username);  // Return empty if the entity was not found
+        }
+    }
+
+    public Boolean changeStatus(String username, Boolean status, Class<T> entityClass) {
+        Optional<T> optionalEntity = findByUsername(username, entityClass);
+
+        if (optionalEntity.isPresent()) {
+            T entity = optionalEntity.get();
+            try (Session session = sessionFactory.openSession()) {
+                Transaction transaction = null;
+                try {
+                    transaction = session.beginTransaction();
+
+                    // Assuming the entity has a User field with a setPassword method
+                    User user = null;
+                    if (entity instanceof Trainee) {
+                        user = ((Trainee) entity).getUser();
+                    } else if (entity instanceof Trainer) {
+                        user = ((Trainer) entity).getUser();
+                    }
+
+                    if (user != null) {
+                        user.setIsActive(status);
+                    }
+
+                    session.merge(entity);  // Merge the updated entity
+                    transaction.commit();
+
+                } catch (HibernateException e) {
+                    if (transaction != null) transaction.rollback();
+                    e.printStackTrace();
+                    return false;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return false;
+            }
+            return true;
+        } else {
+            throw new UserNotFoundException(username);  // Return empty if the entity was not found
+        }
     }
 }

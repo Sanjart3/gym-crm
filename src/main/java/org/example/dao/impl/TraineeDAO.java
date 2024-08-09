@@ -69,35 +69,7 @@ public class TraineeDAO extends AbstractProfileDao<Trainee> {
 
     @Override
     public Optional<Trainee> changePassword(String username, String newPassword) {
-        Optional<Trainee> optionalTrainee = findByUsername(username);
-
-        if (optionalTrainee.isPresent()) {
-            Trainee trainee = optionalTrainee.get();
-            try (Session session = sessionFactory.openSession()) {
-                Transaction transaction = null;
-                try {
-                    transaction = session.beginTransaction();
-                    User user = trainee.getUser();
-                    if (user != null) {
-                        user.setPassword(newPassword);
-                    }
-
-                    session.merge(trainee);
-                    transaction.commit();
-
-                } catch (HibernateException e) {
-                    if (transaction != null) transaction.rollback();
-                    e.printStackTrace();
-                    return Optional.empty();
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                return Optional.empty();
-            }
-            return Optional.of(trainee);
-        } else {
-            return Optional.empty();
-        }
+        return changePassword(username, newPassword, Trainee.class);
     }
 
     public Boolean deleteByUsername(String username) {
@@ -135,6 +107,11 @@ public class TraineeDAO extends AbstractProfileDao<Trainee> {
             if (session != null) session.close();
         }
         return false; // Deletion failed or Trainer not found
+    }
+
+    @Override
+    public Boolean changeStatus(String username, Boolean status) {
+        return changeStatus(username, status, Trainee.class);
     }
 
 

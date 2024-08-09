@@ -2,11 +2,8 @@ package org.example.dao.impl;
 
 import org.example.dao.AbstractProfileDao;
 import org.example.entities.Trainer;
-import org.example.entities.User;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -56,39 +53,16 @@ public class TrainerDAO extends AbstractProfileDao<Trainer> {
 
     @Override
     public Optional<Trainer> changePassword(String username, String newPassword) {
-        Optional<Trainer> optionalTrainee = findByUsername(username);
-
-        if (optionalTrainee.isPresent()) {
-            Trainer trainer = optionalTrainee.get();
-            try (Session session = sessionFactory.openSession()) {
-                Transaction transaction = null;
-                try {
-                    transaction = session.beginTransaction();
-                    User user = trainer.getUser();
-                    if (user != null) {
-                        user.setPassword(newPassword);
-                    }
-
-                    session.merge(trainer);
-                    transaction.commit();
-
-                } catch (HibernateException e) {
-                    if (transaction != null) transaction.rollback();
-                    e.printStackTrace();
-                    return Optional.empty();
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                return Optional.empty();
-            }
-            return Optional.of(trainer);
-        } else {
-            return Optional.empty();
-        }
+        return changePassword(username, newPassword, Trainer.class);
     }
 
     @Override
     public Boolean deleteByUsername(String username) {
         return null;
+    }
+
+    @Override
+    public Boolean changeStatus(String username, Boolean status) {
+        return changeStatus(username, status, Trainer.class);
     }
 }
