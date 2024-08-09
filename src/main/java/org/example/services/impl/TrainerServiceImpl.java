@@ -4,9 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.dao.impl.TrainerDAO;
 import org.example.entities.Trainer;
-import org.example.entities.User;
 import org.example.services.TrainerService;
-import org.example.services.UserService;
 import org.example.utils.exception.TrainerNotFoundException;
 import org.example.utils.exception.ValidatorException;
 import org.example.utils.validation.impl.TrainerValidation;
@@ -20,8 +18,6 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Autowired
     private TrainerDAO trainerDAO;
-    @Autowired
-    private UserService userService;
     private TrainerValidation trainerValidation;
     private static final Logger LOGGER = LogManager.getLogger(TrainerServiceImpl.class);
     @Autowired
@@ -45,7 +41,7 @@ public class TrainerServiceImpl implements TrainerService {
     public Trainer save(Trainer trainer) {
         try{
             trainerValidation.isValidForCreate(trainer);  //checks for validation, and throws exception for invalid parameters
-            Trainer savedTrainer = trainerDAO.update(trainer);
+            Trainer savedTrainer = trainerDAO.create(trainer).get();
             LOGGER.info("Saved trainer " + savedTrainer);
             return savedTrainer;
         } catch (ValidatorException e){
@@ -59,7 +55,7 @@ public class TrainerServiceImpl implements TrainerService {
         if (trainerDAO.existById(trainer.getId())) {
             try {
                 trainerValidation.isValidForUpdate(trainer);  //checks for validation, and throws exception for invalid parameters
-                Trainer updatedTrainer = trainerDAO.update(trainer);
+                Trainer updatedTrainer = trainerDAO.update(trainer).get();
                 LOGGER.info("Updated trainer " + updatedTrainer);
                 return updatedTrainer;
             } catch (ValidatorException e){

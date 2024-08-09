@@ -4,9 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.dao.impl.TraineeDAO;
 import org.example.entities.Trainee;
-import org.example.entities.User;
 import org.example.services.TraineeService;
-import org.example.services.UserService;
 import org.example.utils.exception.TraineeNotFoundException;
 import org.example.utils.exception.ValidatorException;
 import org.example.utils.validation.impl.TraineeValidation;
@@ -25,9 +23,6 @@ public class TraineeServiceImpl implements TraineeService {
     @Autowired
     private TraineeValidation traineeValidation;
 
-    @Autowired
-    private UserService userService;
-
     @Override
     public List<Trainee> findAll() {
         return traineeDAO.readAll();
@@ -42,9 +37,7 @@ public class TraineeServiceImpl implements TraineeService {
     public Trainee save(Trainee trainee) {
         try {
             traineeValidation.isValidForCreate(trainee);  //checks for validation, and throws exception for invalid parameters
-            User user = userService.save(trainee.getUser());
-            trainee.setUser(user);
-            Trainee createdTrainee = traineeDAO.create(trainee);
+            Trainee createdTrainee = traineeDAO.create(trainee).get();
             LOGGER.info("Trainee created: {}", createdTrainee);
             return createdTrainee;
         } catch (ValidatorException e) {
@@ -58,7 +51,7 @@ public class TraineeServiceImpl implements TraineeService {
         if (traineeDAO.existById(trainee.getId())) {
             try{
                 traineeValidation.isValidForUpdate(trainee); //checks for validation, and throws exception for invalid parameters
-                Trainee updatedTrainee = traineeDAO.update(trainee);
+                Trainee updatedTrainee = traineeDAO.update(trainee).get();
                 LOGGER.info("Trainee updated: {}", updatedTrainee);
                 return updatedTrainee;
             }catch (ValidatorException e) {
