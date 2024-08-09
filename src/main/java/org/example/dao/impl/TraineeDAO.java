@@ -19,6 +19,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -154,6 +155,37 @@ public class TraineeDAO extends AbstractProfileDao<Trainee> {
         }
     }
 
+    public List<Trainer> getUnassignedTrainersByTraineeUsername(String username) {
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Trainee> traineeQuery = criteriaBuilder.createQuery(Trainee.class);
+            Root<Trainee> traineeRoot = traineeQuery.from(Trainee.class);
+            Join<Trainee, User> userJoin = traineeRoot.join(USER_ATTRIBUTE);
+            traineeQuery.where(criteriaBuilder.equal(userJoin.get(USERNAME_ATTRIBUTE), username));
 
+            Trainee trainee = session.createQuery(traineeQuery).uniqueResult();
+
+            if (trainee == null) {
+                throw new TraineeNotFoundException(username); // No trainee found with that username
+            }
+
+            // Step 2: Get the list of assigned trainers
+            List<Trainer> assignedTrainers = trainee.getTrainers();
+
+            // Step 3: Query for all trainers not assigned to this trainee
+            CriteriaQuery<Trainer> trainerQuery = criteriaBuilder.createQuery(Trainer.class);
+            Root<Trainer> trainerRoot = trainerQuery.from(Trainer.class);
+
+            if (!assignedTrainers.isEmpty()) {
+                trainerQuery.where(trainerRoot.in(assignedTrainers).not());
+            }
+
+            Query<Trainer> query = session.createQuery(trainerQuery);
+            return query.getResultList();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            return Collections.emptyList();  // Handle error case
+        }
+    }
 
 }
