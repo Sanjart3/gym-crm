@@ -2,6 +2,7 @@ package org.example.dao.impl;
 
 import org.example.dao.AbstractProfileDao;
 import org.example.entities.Trainer;
+import org.example.utils.PasswordGenerator;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,10 @@ public class TrainerDAO extends AbstractProfileDao<Trainer> {
     @Autowired
     public TrainerDAO(SessionFactory sessionFactory) {
         super(sessionFactory);
+    }
+    @Autowired
+    public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
+        this.passwordGenerator = passwordGenerator;
     }
 
     @Override
@@ -41,6 +46,11 @@ public class TrainerDAO extends AbstractProfileDao<Trainer> {
         Trainer trainer = session.get(Trainer.class, id);
         session.close();
         return trainer;
+    }
+
+    @Override
+    public Optional<Trainer> create(Trainer trainer) {
+        return create(trainer, Trainer.class);
     }
 
     @Override
