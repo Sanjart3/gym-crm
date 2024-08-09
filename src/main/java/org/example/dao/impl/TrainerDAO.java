@@ -26,11 +26,6 @@ public class TrainerDAO extends AbstractProfileDao<Trainer> {
     }
 
     @Override
-    public Boolean deleteByUsername(String username) {
-        return null;
-    }
-
-    @Override
     public Optional<Trainer> findByUsernameAndPassword(String username, String password) {
         return findByUsernameAndPassword(username, password, Trainer.class);
     }
@@ -90,5 +85,10 @@ public class TrainerDAO extends AbstractProfileDao<Trainer> {
         } else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Boolean deleteByUsername(String username) {
+        return null;
     }
 }

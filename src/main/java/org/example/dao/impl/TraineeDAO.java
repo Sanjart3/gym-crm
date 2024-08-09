@@ -63,11 +63,6 @@ public class TraineeDAO extends AbstractProfileDao<Trainee> {
     }
 
     @Override
-    public Boolean deleteByUsername(String username) {
-        return null;
-    }
-
-    @Override
     public Optional<Trainee> findByUsernameAndPassword(String username, String password) {
         return findByUsernameAndPassword(username, password, Trainee.class);
     }
