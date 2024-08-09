@@ -3,6 +3,7 @@ package org.example.services.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.dao.impl.TrainingDAO;
+import org.example.dto.CriteriaDto;
 import org.example.entities.Training;
 import org.example.services.TrainingService;
 import org.example.utils.exception.ValidatorException;
@@ -40,12 +41,17 @@ public class TrainingServiceImpl implements TrainingService {
     public Training save(Training training) {
         try{
             trainingValidation.isValidForCreate(training);  //checks for validation, and throws exception for invalid parameters
-            Training savedTraining = trainingDAO.create(training);
+            Training savedTraining = trainingDAO.create(training).get();
             LOGGER.info("Saved training: {}", savedTraining);
             return savedTraining;
         } catch (ValidatorException e) {
             LOGGER.warn("Invalid training: {}", training, e);
             throw e;
         }
+    }
+
+    public List<Training> searchtrainings(CriteriaDto criteriaDto){
+        List<Training> trainings = trainingDAO.searchTrainings(criteriaDto);
+        return trainings;
     }
 }

@@ -1,6 +1,8 @@
 package org.example.dao.impl;
 
 import org.example.dao.CRDao;
+import org.example.dao.TrainingDao;
+import org.example.dto.CriteriaDto;
 import org.example.entities.Training;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public class TrainingDAO implements CRDao<Training> {
+public class TrainingDAO extends TrainingDao {
 
     private static SessionFactory sessionFactory;
 
@@ -38,12 +40,7 @@ public class TrainingDAO implements CRDao<Training> {
     }
 
     @Override
-    public Optional<Training> create(Class<Training> t) {
-        return Optional.empty();
-    }
-
-
-    public Training create(Training training) {
+    public Optional<Training> create(Training training) {
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
         Training savedTraining = null;
@@ -58,7 +55,7 @@ public class TrainingDAO implements CRDao<Training> {
         } finally {
             session.close();
         }
-        return savedTraining;
+        return Optional.ofNullable(savedTraining);
     }
     @Override
     public Boolean existById(Long id) {
@@ -66,4 +63,5 @@ public class TrainingDAO implements CRDao<Training> {
 //        return trainingMap.containsKey(id);
         return false;
     }
+
 }
