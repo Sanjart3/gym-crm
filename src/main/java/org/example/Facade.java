@@ -6,7 +6,6 @@ import org.example.entities.*;
 import org.example.services.impl.TraineeServiceImpl;
 import org.example.services.impl.TrainerServiceImpl;
 import org.example.services.impl.TrainingServiceImpl;
-import org.example.services.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
