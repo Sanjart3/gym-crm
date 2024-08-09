@@ -1,32 +1,25 @@
 package org.example.dao.impl;
 
 
-import org.example.dao.ProfileDao;
+import org.example.dao.AbstractProfileDao;
 import org.example.entities.Trainee;
 import org.example.entities.User;
-import org.example.utils.exception.TraineeNotFoundException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class TraineeDAO implements ProfileDao<Trainee> {
+public class TraineeDAO extends AbstractProfileDao<Trainee> {
 
-    private static SessionFactory sessionFactory;
     @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public TraineeDAO(SessionFactory sessionFactory) {
+        super(sessionFactory);
     }
     @Override
     public List<Trainee> readAll() {
@@ -45,43 +38,6 @@ public class TraineeDAO implements ProfileDao<Trainee> {
     }
 
     @Override
-    public Trainee create(Trainee trainee) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = null;
-        Trainee savedTrainee = null;
-        try{
-            transaction = session.beginTransaction();
-            Long traineeId = (Long) session.save(trainee);
-            savedTrainee = (Trainee) session.get(Trainee.class, traineeId);
-            transaction.commit();
-        } catch (HibernateException e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return savedTrainee;
-    }
-
-    @Override
-    public Trainee update(Trainee trainee) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = null;
-        try{
-            transaction = session.beginTransaction();
-            trainee = (Trainee) session.merge(trainee);
-            session.update(trainee);
-            transaction.commit();
-        } catch (HibernateException e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return trainee;
-    }
-
-    @Override
     public Boolean existById(Long id) {
         Session session = sessionFactory.openSession();
         Trainee trainee = session.get(Trainee.class, id);
@@ -90,55 +46,46 @@ public class TraineeDAO implements ProfileDao<Trainee> {
     }
 
     @Override
-    public Trainee findByUsername(String username) {
-        CriteriaBuilder criteriaBuilder = sessionFactory.getCriteriaBuilder();
-        CriteriaQuery<Trainee> criteriaQuery = criteriaBuilder.createQuery(Trainee.class);
-        Root<Trainee> trainerRoot = criteriaQuery.from(Trainee.class);
-        Join<Trainee, User> trainerUserJoin = trainerRoot.join("user");
-
-        criteriaQuery.where(criteriaBuilder.equal(trainerUserJoin.get("username"), username));
-        Session session = sessionFactory.openSession();
-        Trainee trainee = session.createQuery(criteriaQuery).uniqueResult();
-        session.close();
-        return trainee;
+    public Optional<Trainee> findByUsername(String username) {
+        return findByUsername(username, Trainee.class);
     }
 
     @Override
-    public Boolean deleteByUsername(String username) {
-        CriteriaBuilder criteriaBuilder = sessionFactory.getCriteriaBuilder();
-        CriteriaQuery<Trainee> criteriaQuery = criteriaBuilder.createQuery(Trainee.class);
-        Root<Trainee> trainerRoot = criteriaQuery.from(Trainee.class);
-        Join<Trainee, User> trainerUserJoin = trainerRoot.join("user");
-        // Build the query to find the trainer by username
-        criteriaQuery.where(criteriaBuilder.equal(trainerUserJoin.get("username"), username));
+    public Optional<Trainee> findByUsernameAndPassword(String username, String password) {
+        return findByUsernameAndPassword(username, password, Trainee.class);
+    }
 
-        Trainee trainerToDelete;
-        Session session = null;
-        Transaction transaction = null;
+    @Override
+    public Optional<Trainee> changePassword(String username, String newPassword) {
+        Optional<Trainee> optionalTrainee = findByUsername(username);
 
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+        if (optionalTrainee.isPresent()) {
+            Trainee trainee = optionalTrainee.get();
+            try (Session session = sessionFactory.openSession()) {
+                Transaction transaction = null;
+                try {
+                    transaction = session.beginTransaction();
+                    User user = trainee.getUser();
+                    if (user != null) {
+                        user.setPassword(newPassword);
+                    }
 
-            Query<Trainee> query = session.createQuery(criteriaQuery);
-            trainerToDelete = query.getSingleResult();
+                    session.merge(trainee);  // Merge the updated trainee
+                    transaction.commit();
 
-            if (trainerToDelete != null) {
-                session.delete(trainerToDelete);
-                transaction.commit();
-                return true;
+                } catch (HibernateException e) {
+                    if (transaction != null) transaction.rollback();
+                    e.printStackTrace();
+                    return Optional.empty();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return Optional.empty();
             }
-        } catch (NoResultException e) {
-            if (transaction != null) transaction.rollback();
-            throw new TraineeNotFoundException(username);
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            if (session != null) session.close();
+            return Optional.of(trainee);
+        } else {
+            return Optional.empty();  // Return empty if the trainee was not found
         }
-
-        return false;
     }
 
 }

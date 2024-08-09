@@ -67,12 +67,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean delete(Long id) {
-        if (userDAO.existById(id)){
-            userDAO.deleteById(id);
-            LOGGER.info("Deleted user: {}", id);
-            return true;
-        }
-        LOGGER.error("User with id {} not found", id);
-        throw new UserNotFoundException(id);
+        return null;
     }
+
+//    @Override
+//    public Boolean delete(Long id) {
+//        if (userDAO.existById(id)){
+//            userDAO.deleteById(id);
+//            LOGGER.info("Deleted user: {}", id);
+//            return true;
+//        }
+//        LOGGER.error("User with id {} not found", id);
+//        throw new UserNotFoundException(id);
+//    }
 }
