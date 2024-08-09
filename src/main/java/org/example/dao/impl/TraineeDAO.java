@@ -70,7 +70,7 @@ public class TraineeDAO extends AbstractProfileDao<Trainee> {
                         user.setPassword(newPassword);
                     }
 
-                    session.merge(trainee);  // Merge the updated trainee
+                    session.merge(trainee);
                     transaction.commit();
 
                 } catch (HibernateException e) {
@@ -84,7 +84,7 @@ public class TraineeDAO extends AbstractProfileDao<Trainee> {
             }
             return Optional.of(trainee);
         } else {
-            return Optional.empty();  // Return empty if the trainee was not found
+            return Optional.empty();
         }
     }
 
