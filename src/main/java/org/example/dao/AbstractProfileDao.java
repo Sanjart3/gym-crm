@@ -13,7 +13,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.util.Optional;
 
-public abstract class AbstractProfileDao<T> implements CRDao<T> {
+public abstract class AbstractProfileDao<T> implements ProfileDao<T> {
     private final static String USER_ATTRIBUTE = "user";
     private final static String USERNAME_ATTRIBUTE = "username";
     private final static String PASSWORD_ATTRIBUTE = "password";
@@ -93,4 +93,9 @@ public abstract class AbstractProfileDao<T> implements CRDao<T> {
     }
 
     public abstract Optional<T> changePassword(String username, String newPassword);
+
+    @Override
+    public Boolean changeStatus(String username, Boolean status) {
+
+    }
 }
