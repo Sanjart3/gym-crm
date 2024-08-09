@@ -114,5 +114,46 @@ public class TraineeDAO extends AbstractProfileDao<Trainee> {
         return changeStatus(username, status, Trainee.class);
     }
 
+    public Optional<Trainee> addTrainerToTrainee(Long traineeId, Trainer trainer) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            Trainee trainee = session.get(Trainee.class, traineeId);
+            if (trainee != null) {
+                trainee.addTrainer(trainer);
+                session.merge(trainee);
+                transaction.commit();
+                return Optional.of(trainee);
+            } else {
+                transaction.rollback();
+                throw new TraineeNotFoundException(traineeId);  // Trainee not found
+            }
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Trainee> removeTrainerFromTrainee(Long traineeId, Trainer trainer) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            Trainee trainee = session.get(Trainee.class, traineeId);
+            if (trainee != null) {
+                trainee.removeTrainer(trainer);
+                session.merge(trainee);
+                transaction.commit();
+                return Optional.of(trainee);
+            } else {
+                transaction.rollback();
+                throw new TraineeNotFoundException(traineeId);  // Trainee not found
+            }
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+
 
 }
