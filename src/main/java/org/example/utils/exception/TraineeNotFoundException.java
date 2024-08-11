@@ -5,6 +5,6 @@ public class TraineeNotFoundException extends RuntimeException {
         super("Trainee with id " + traineeId + " not found");
     }
     public TraineeNotFoundException(String username) {
-        super("Trainee with id " + username + " not found");
+        super("Trainee with username " + username + " not found");
     }
 }

@@ -182,7 +182,7 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public void authenticate(AuthDto auth) {
-        if(traineeDAO.findByUsernameAndPassword(auth.getUsername(), auth.getPassword()).isPresent()){
+        if(!traineeDAO.findByUsernameAndPassword(auth.getUsername(), auth.getPassword()).isPresent()){
             throw new TraineeNotFoundException(auth.getUsername());
         }
     }
