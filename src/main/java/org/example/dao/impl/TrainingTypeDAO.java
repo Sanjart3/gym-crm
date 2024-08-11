@@ -35,13 +35,8 @@ public class TrainingTypeDAO implements CRDao<TrainingType> {
     }
 
     @Override
-    public Optional<TrainingType> create(Class<TrainingType> t) {
+    public Optional<TrainingType> create(TrainingType trainingType) {
         return Optional.empty();
-    }
-
-
-    public TrainingType create(TrainingType trainingType) {
-        return null;
     }
 
     @Override

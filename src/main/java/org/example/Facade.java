@@ -2,6 +2,7 @@ package org.example;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.dto.AuthDto;
 import org.example.entities.*;
 import org.example.services.impl.TraineeServiceImpl;
 import org.example.services.impl.TrainerServiceImpl;
@@ -71,9 +72,12 @@ public class Facade {
         trainerService.save(trainer);
     }
 
-//    public void createTraining(){
-//        Training training = new Training(7l, 8l, "Kuchamala", 2l, LocalDate.of(2024, 9, 01), 60);
-//        trainingService.save(training);
-//    }
+    public void getTraineeByUsername(String username){
+        System.out.println(traineeService.findByUsername(getAuth(), username));
+    }
+
+    public AuthDto getAuth(){
+        return new AuthDto("bob.johnson", "password4");
+    }
 
 }

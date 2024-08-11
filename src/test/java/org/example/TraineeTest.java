@@ -1,85 +1,151 @@
 package org.example;
 
-import org.example.config.MyAppConfig;
 import org.example.dao.impl.TraineeDAO;
 import org.example.entities.Trainee;
-import org.example.services.impl.TraineeServiceImpl;
-import org.example.utils.validation.impl.TraineeValidation;
+import org.example.entities.User;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = MyAppConfig.class)
 public class TraineeTest {
 
     @Mock
-    private TraineeDAO traineeDAO;
-    @InjectMocks
-    private TraineeServiceImpl traineeService;
+    private SessionFactory sessionFactory;
+
     @Mock
-    private TraineeValidation traineeValidation;
+    private Session session;
+
+    @Mock
+    private Query<Trainee> query;
+
+    @Mock
+    private CriteriaBuilder criteriaBuilder;
+
+    @Mock
+    private CriteriaQuery<Trainee> criteriaQuery;
+
+    @Mock
+    private Root<Trainee> root;
+
+    @SuppressWarnings("unchecked")
+    @Mock
+    private Join<Trainee, User> userJoin;
+
+    @InjectMocks
+    private TraineeDAO traineeDAO;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
+        when(sessionFactory.openSession()).thenReturn(session);
+        when(session.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(Trainee.class)).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(Trainee.class)).thenReturn(root);
+        when(session.createQuery(criteriaQuery)).thenReturn(query);
+//        when(root.join("user")).thenReturn(userJoin);
     }
 
     @Test
-    public void testFindAll() {
+    public void testCreateTrainee() {
+        Trainee trainee = getTrainee();
+        when(session.save(any(Trainee.class))).thenReturn(null);
+
+        traineeDAO.create(trainee);
+
+        verify(session).save(trainee);
+        verify(session).beginTransaction();
+        verify(session.getTransaction()).commit();
+        verify(session).close();
+    }
+
+    @Test
+    public void testFindByUsername() {
+        Trainee trainee = new Trainee();
+        when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
+        when(query.uniqueResult()).thenReturn(trainee);
+
+        Optional<Trainee> result = traineeDAO.findByUsername("testUsername");
+
+        assertTrue(result.isPresent());
+        verify(session).createQuery(anyString(), eq(Trainee.class));
+        verify(session).close();
+    }
+
+    @Test
+    public void testReadAll() {
         List<Trainee> traineeList = new ArrayList<>();
-        when(traineeDAO.readAll()).thenReturn(traineeList);
+        when(session.createQuery("from Trainee", Trainee.class)).thenReturn(query);
+        when(query.getResultList()).thenReturn(traineeList);
 
-        List<Trainee> trainees = traineeService.findAll();
+        List<Trainee> result = traineeDAO.readAll();
 
-        verify(traineeDAO, times(1)).readAll();
-        assertEquals(traineeList, trainees);
+        assertEquals(traineeList, result);
+        verify(session).createQuery("from Trainee", Trainee.class);
+        verify(session).close();
     }
 
     @Test
-    public void testFindById() {
-        Trainee trainee = null;
-        when(traineeDAO.readById(1L)).thenReturn(trainee);
+    public void testReadById() {
+        Trainee trainee = new Trainee();
+        when(session.get(Trainee.class, 1L)).thenReturn(trainee);
 
-        Trainee foundTrainee = traineeService.findById(1L);
+        Trainee result = traineeDAO.readById(1L);
 
-        verify(traineeDAO, times(1)).readById(1L);
-        assertEquals(trainee, foundTrainee);
+        assertEquals(trainee, result);
+        verify(session).get(Trainee.class, 1L);
+        verify(session).close();
     }
 
     @Test
-    public void testSave() {
-        Trainee trainee = new Trainee(LocalDate.of(2003,12,24), "Samarkhand", 3l);
-        when(traineeValidation.isValidForCreate(trainee)).thenReturn(true);
-        when(traineeDAO.create(trainee)).thenReturn(trainee);
+    public void testExistById() {
+        when(session.get(Trainee.class, 1L)).thenReturn(new Trainee());
 
-        Trainee savedTrainee = traineeService.save(trainee);
+        Boolean result = traineeDAO.existById(1L);
 
-        verify(traineeDAO, times(1)).create(trainee);
-        assertEquals(trainee, savedTrainee);
+        assertTrue(result);
+        verify(session).get(Trainee.class, 1L);
+        verify(session).close();
     }
 
     @Test
-    public void testUpdate() {
-        Trainee trainee = null;
-        when(traineeValidation.isValidForUpdate(trainee)).thenReturn(true);
-        when(traineeDAO.update(trainee)).thenReturn(trainee);
+    public void testChangePassword() {
+        Trainee trainee = new Trainee();
+        trainee.setUser(new User());
+        trainee.getUser().setPassword("oldPassword");
 
-        Trainee updatedTrainee = traineeService.update(trainee);
+        when(session.createQuery(anyString(), eq(Trainee.class))).thenReturn(query);
+        when(query.uniqueResult()).thenReturn(trainee);
 
-        verify(traineeDAO, times(1)).update(trainee);
-        assertEquals(trainee, updatedTrainee);
+        traineeDAO.changePassword("newPassword", "testUsername", Trainee.class);
+
+        assertEquals("newPassword", trainee.getUser().getPassword());
+        verify(session).createQuery(anyString(), eq(Trainee.class));
+        verify(session).close();
+    }
+
+    public Trainee getTrainee(){
+        User user = new User("Sanjar", "Totliboyev", true);
+        Trainee trainee = new Trainee(LocalDate.of(2003, 06, 04), "Navoiy Galaba shokh 3", user);
+        return trainee;
     }
 }
