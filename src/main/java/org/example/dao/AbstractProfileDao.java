@@ -35,7 +35,6 @@ public abstract class AbstractProfileDao<T> implements ProfileDao<T> {
     public Optional<T> create(T entity, Class<T> entityClass){
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
-        T createdEntity = null;
         try{
             transaction = session.beginTransaction();
             User user = null;
@@ -57,7 +56,7 @@ public abstract class AbstractProfileDao<T> implements ProfileDao<T> {
         } finally {
             session.close();
         }
-        return Optional.ofNullable(createdEntity);
+        return Optional.ofNullable(entity);
     }
 
     public Optional<T> findByUsername(String username, Class<T> entityClass) {
