@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class App
 {
-    public static void main( String[] args ) throws SQLException, IOException {
+    public static void main( String[] args ){
         ApplicationContext context = new AnnotationConfigApplicationContext(MyAppConfig.class);
     }
 }
