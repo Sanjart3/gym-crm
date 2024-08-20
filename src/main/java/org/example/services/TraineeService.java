@@ -1,6 +1,7 @@
 package org.example.services;
 
 import org.example.dto.AuthDto;
+import org.example.dto.PasswordChangeDto;
 import org.example.entities.Trainee;
 import org.example.entities.Trainer;
 
@@ -8,11 +9,12 @@ import java.util.List;
 
 public interface TraineeService {
     Trainee findByUsername(AuthDto auth, String username);
-    void passwordChange(AuthDto auth, String username, String newPassword);
+    void changePassword(AuthDto auth, PasswordChangeDto passwordChangeDto);
+
     void changeStatus(AuthDto auth, String username, boolean status);
     List<Trainee> findAll();
     Trainee findById(Long id);
-    Trainee save(Trainee trainee);
+    AuthDto save(Trainee trainee);
     Trainee update(AuthDto auth, Trainee trainee);
     Boolean deleteByUsername(AuthDto auth, String username);
 

@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.dao.impl.TraineeDAO;
 import org.example.dto.AuthDto;
+import org.example.dto.PasswordChangeDto;
 import org.example.entities.Trainee;
 import org.example.entities.Trainer;
 import org.example.services.TraineeService;
@@ -44,15 +45,16 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public void passwordChange(AuthDto auth, String username, String newPassword) {
+    public void changePassword(AuthDto auth, PasswordChangeDto passwordChangeDto) {
+        String username = passwordChangeDto.getUsername();
         try{
             authenticate(auth);
-            Optional<Trainee> trainee = traineeDAO.changePassword(username, newPassword);
+            Optional<Trainee> trainee = traineeDAO.changePassword(passwordChangeDto.getUsername(), passwordChangeDto.getNewPassword());
             if (trainee.isPresent()) {
                 LOGGER.info("Password changed successfully!");
             } else {
                 LOGGER.error("Password change failed!");
-                throw new TraineeNotFoundException(username);
+                throw new TraineeNotFoundException(passwordChangeDto.getUsername());
             }
         } catch (TraineeNotFoundException e) {
             throw new TraineeNotFoundException(username);
@@ -85,12 +87,13 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public Trainee save(Trainee trainee) {
+    public AuthDto save(Trainee trainee) {
         try {
             traineeValidation.isValidForCreate(trainee);  //checks for validation, and throws exception for invalid parameters
             Trainee createdTrainee = traineeDAO.create(trainee).get();
             LOGGER.info("Trainee created: {}", createdTrainee);
-            return createdTrainee;
+            AuthDto authCredentials = new AuthDto(createdTrainee.getUser().getUsername(), createdTrainee.getUser().getPassword());
+            return authCredentials;
         } catch (ValidatorException e) {
             LOGGER.warn("Trainee not created: {}", trainee, e);
             throw e;
