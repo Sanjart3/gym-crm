@@ -1,9 +1,13 @@
 package org.example.entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "trainers")
+@Data
 public class Trainer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -14,6 +18,9 @@ public class Trainer {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Trainee> trainees;
+
     public Trainer(Long id, Long specialization, User user) {
         this.id = id;
         this.specialization = specialization;
@@ -23,33 +30,6 @@ public class Trainer {
     public Trainer(Long specialization, User user) {
         this.specialization = specialization;
         this.user = user;
-    }
-
-    public Trainer() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(Long specialization) {
-        this.specialization = specialization;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User userId) {
-        this.user = userId;
     }
 
     @Override
