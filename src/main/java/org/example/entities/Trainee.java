@@ -1,11 +1,14 @@
 package org.example.entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "trainees")
+@Data
 public class Trainee {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,10 +28,6 @@ public class Trainee {
             inverseJoinColumns = @JoinColumn(name = "trainer_id")
     )
     private List<Trainer> trainers;
-
-    public List<Trainer> getTrainers() {
-        return trainers;
-    }
 
     public void addTrainer(Trainer trainer) {
         if (this.trainers != null && !this.trainers.contains(trainer)) {
@@ -58,39 +57,6 @@ public class Trainee {
 
     public Trainee() {
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User userId) {
-        this.user = userId;
-    }
-
     @Override
     public String toString() {
         return "Trainee{" +
