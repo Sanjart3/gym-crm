@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.dao.impl.TrainerDAO;
 import org.example.dto.AuthDto;
+import org.example.dto.PasswordChangeDto;
 import org.example.entities.Trainer;
 import org.example.services.TrainerService;
 import org.example.utils.exception.TrainerNotFoundException;
@@ -39,10 +40,10 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public void changePassword(AuthDto auth, String username, String newPassword) {
+    public void changePassword(AuthDto auth, PasswordChangeDto passwordChangeDto) {
         try {
             authenticate(auth);
-            Optional<Trainer> trainer = trainerDAO.changePassword(username, newPassword);
+            Optional<Trainer> trainer = trainerDAO.changePassword(passwordChangeDto.getUsername(), passwordChangeDto.getNewPassword());
             if (trainer.isPresent()) {
                 LOGGER.info("Password changed successfully!");
             } else {
@@ -85,12 +86,13 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public Trainer save(Trainer trainer) {
+    public AuthDto save(Trainer trainer) {
         try{
             trainerValidation.isValidForCreate(trainer);  //checks for validation, and throws exception for invalid parameters
             Trainer savedTrainer = trainerDAO.create(trainer).get();
             LOGGER.info("Saved trainer " + savedTrainer);
-            return savedTrainer;
+            AuthDto authDto = new AuthDto(savedTrainer.getUser().getUsername(), savedTrainer.getUser().getPassword());
+            return authDto;
         } catch (ValidatorException e){
             LOGGER.warn("Invalid trainer to save: {}", trainer, e);
             throw e;
