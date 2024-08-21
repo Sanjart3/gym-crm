@@ -32,6 +32,9 @@ public class Trainer {
         this.user = user;
     }
 
+    public Trainer() {
+    }
+
     @Override
     public String toString() {
         return "Trainer{" +

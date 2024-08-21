@@ -31,6 +31,15 @@ public class User {
         this.isActive = isActive;
     }
 
+    public User(String lastName, String firstName, Boolean isActive) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.isActive = isActive;
+    }
+
+    public User() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
