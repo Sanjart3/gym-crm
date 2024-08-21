@@ -21,13 +21,16 @@ import org.springframework.http.HttpStatus;
 public class TrainerController {
 
     private final Logger LOGGER = LogManager.getLogger(TrainerController.class);
-    private TrainerConverter converter;
-
+    private final TrainerConverter converter;
+    private final TrainerService trainerService;
     @Autowired
-    private TrainerService trainerService;
+    public TrainerController(TrainerConverter converter, TrainerService trainerService) {
+        this.converter = converter;
+        this.trainerService = trainerService;
+    }
 
     @PostMapping("sign-up")
-    public ResponseEntity signUp(@RequestBody Trainer trainer) {
+    public ResponseEntity<?> signUp(@RequestBody Trainer trainer) {
         String transactionId = TransactionLogger.getTransactionId();
         LOGGER.info("[Transaction id: {}] POST /api/trainer/sign-up: Trainer sign-up initiated", transactionId);
         try {
@@ -43,7 +46,7 @@ public class TrainerController {
     }
 
     @GetMapping("login")
-    public ResponseEntity login(@RequestBody AuthDto authDto) {
+    public ResponseEntity<?> login(@RequestBody AuthDto authDto) {
         String transactionId = TransactionLogger.getTransactionId();
         LOGGER.info("[Transaction id: {}] GET /api/trainer/login: Trainer login initiated", transactionId);
         try {
@@ -59,7 +62,7 @@ public class TrainerController {
     }
 
     @PutMapping("{username}/change-password")
-    public ResponseEntity changePassword(@PathVariable("username") String username,
+    public ResponseEntity<?> changePassword(@PathVariable("username") String username,
                                          @RequestHeader AuthDto authDto,
                                          @RequestBody PasswordChangeDto passwordChangeDto) {
         String transactionId = TransactionLogger.getTransactionId();
@@ -78,7 +81,7 @@ public class TrainerController {
 
 
     @GetMapping("{username}/profile")
-    public ResponseEntity profile(@PathVariable("username") String username,
+    public ResponseEntity<?> profile(@PathVariable("username") String username,
                                   @RequestHeader AuthDto authDto) {
         String transactionId = TransactionLogger.getTransactionId();
         LOGGER.info("[Transaction id: {}] GET /api/trainer/{}/profile: Trainer profile initiated", transactionId, username);
@@ -95,20 +98,20 @@ public class TrainerController {
     }
 
     @PutMapping("{username}/update-profile")
-    public ResponseEntity updateProfile(@PathVariable String username,
+    public ResponseEntity<?> updateProfile(@PathVariable String username,
                                         @RequestHeader AuthDto authDto,
                                         @RequestBody TrainerUpdateRequestDto trainerUpdateRequestDto) {
         String transactionId = TransactionLogger.getTransactionId();
         LOGGER.info("[Transaction id: {}] PUT /api/trainer/{}/update-profile: Trainer profile update initiated", transactionId, username);
         try {
             Trainer trainer = trainerService.update(authDto, converter.fromTrainerUpdateRequestToTrainer(trainerUpdateRequestDto));
-            LOGGER.info("[Transaction id: {}] PUT /api/trainer/{}/update-profile: Status code: 200 OK. Trainer profile update successful for username: {}", transactionId, username);
+            LOGGER.info("[Transaction id: {}] PUT /api/trainer/{}/update-profile: Status code: 200 OK. Trainer profile update successful for username: {}", transactionId, username, username);
             return ResponseEntity.status(HttpStatus.OK).body(trainer);
         } catch (TrainerNotFoundException te) {
-            LOGGER.error("[Transaction id: {}] PUT /api/trainer/{}/update-profile: Status code: 404 Not Found. No trainer found for username: {}", transactionId, username);
+            LOGGER.error("[Transaction id: {}] PUT /api/trainer/{}/update-profile: Status code: 404 Not Found. No trainer found for username: {}", transactionId, username, username);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(te.getMessage());
         } catch (ValidatorException e) {
-            LOGGER.error("[Transaction id: {}] PUT /api/trainer/{}/update-profile: Status code: 422 Unprocessable Entity. Not valid trainer to update for username: {}", transactionId, username);
+            LOGGER.error("[Transaction id: {}] PUT /api/trainer/{}/update-profile: Status code: 422 Unprocessable Entity. Not valid trainer to update for username: {}", transactionId, username, username);
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         } finally {
             TransactionLogger.clear();
@@ -116,14 +119,14 @@ public class TrainerController {
     }
 
     @PatchMapping("{username}/change-status")
-    public ResponseEntity changeStatus(@PathVariable String username,
+    public ResponseEntity<?> changeStatus(@PathVariable String username,
                                        @RequestHeader AuthDto authDto,
                                        @RequestBody Boolean newStatus){
         String transactionId = TransactionLogger.getTransactionId();
         LOGGER.info("[Transaction id: {}] PATCH /api/trainer/{}/change-status: Trainer status change initiated", transactionId, username);
         try {
             trainerService.changeStatus(authDto, username, newStatus);
-            LOGGER.info("[Transaction id: {}] PATCH /api/trainer/{}/change-status: Status code: 200 OK. Status change for username: ", transactionId, username, username);
+            LOGGER.info("[Transaction id: {}] PATCH /api/trainer/{}/change-status: Status code: 200 OK. Status change for username: {}", transactionId, username, username);
             return ResponseEntity.ok().build();
         } catch (TrainerNotFoundException e) {
             LOGGER.error("[Transaction id: {}] PATCH /api/trainer/{}/change-status: Status code: 404 Not found. No trainer found for username: {}", transactionId, username, username);

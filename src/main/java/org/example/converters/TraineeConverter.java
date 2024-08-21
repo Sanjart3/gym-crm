@@ -5,9 +5,11 @@ import org.example.dto.PasswordChangeDto;
 import org.example.dto.TraineeUpdateRequestDto;
 import org.example.entities.Trainee;
 import org.example.entities.User;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+@Component
 public class TraineeConverter {
     public AuthDto fromPasswordChangeDtoToAuthDto(PasswordChangeDto passwordChangeDto) {
         String username = passwordChangeDto.getUsername();
