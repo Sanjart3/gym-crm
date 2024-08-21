@@ -23,13 +23,18 @@ import java.util.List;
 @RequestMapping(value = "/api/trainee", consumes = {"application/json"}, produces = {"application/json", "application/XML"})
 public class TraineeController {
     private final Logger LOGGER = LogManager.getLogger(TraineeController.class);
-    private TraineeConverter traineeConverter;
+    private final TraineeConverter traineeConverter;
+    private final TraineeService traineeService;
 
     @Autowired
-    private TraineeService traineeService;
+    public TraineeController(TraineeConverter traineeConverter, TraineeService traineeService) {
+        this.traineeConverter = traineeConverter;
+        this.traineeService = traineeService;
+    }
+
 
     @PostMapping("sign-up")
-    public ResponseEntity registerNewTrainee(@RequestBody Trainee trainee) {
+    public ResponseEntity<?> registerNewTrainee(@RequestBody Trainee trainee) {
         String transactionId = TransactionLogger.getTransactionId();
         LOGGER.info("[Transaction id: {}] POST /trainee/sign-up: Trainee sign-up initiated", transactionId);
         try {
@@ -37,7 +42,7 @@ public class TraineeController {
             LOGGER.info("[Transaction id: {}] POST /api/trainee/sign-up  Status code: 201 Created", transactionId);
             return ResponseEntity.ok(loginInfo);
         } catch (ValidatorException ve){
-            LOGGER.error("[Transation id: {}] POST /api/trainee/sign-up: Status code: 422 Unprocessable Trainee", transactionId, ve);
+            LOGGER.error("[Transaction id: {}] POST /api/trainee/sign-up: Status code: 422 Unprocessable Trainee", transactionId, ve);
             return ResponseEntity.badRequest().body(ve);
         } finally {
             TransactionLogger.clear();
@@ -45,7 +50,7 @@ public class TraineeController {
     }
 
     @GetMapping("login")
-    public ResponseEntity login(@RequestBody AuthDto authDto) {
+    public ResponseEntity<?> login(@RequestBody AuthDto authDto) {
         String transactionId = TransactionLogger.getTransactionId();
         LOGGER.info("[Transaction id: {}] GET /api/trainee/login: Trainee login initiated", transactionId);
         try {
@@ -78,7 +83,7 @@ public class TraineeController {
     }
 
     @GetMapping("{username}/profile")
-    public ResponseEntity getProfile(@PathVariable String username,
+    public ResponseEntity<?> getProfile(@PathVariable String username,
                                      @RequestHeader("auth") AuthDto authDto) {
         String transactionId = TransactionLogger.getTransactionId();
         LOGGER.info("[Transaction id: {}] GET /api/trainee/profile: Profile retrieval initiated for username: {}", transactionId, username);
@@ -95,7 +100,7 @@ public class TraineeController {
     }
 
     @PutMapping("{username}/update-profile")
-    public ResponseEntity updateProfile(@PathVariable String username,
+    public ResponseEntity<?> updateProfile(@PathVariable String username,
                                         @RequestHeader("auth") AuthDto authDto,
                                         @RequestBody TraineeUpdateRequestDto traineeRequestDto){
         String transactionId = TransactionLogger.getTransactionId();
@@ -133,7 +138,7 @@ public class TraineeController {
     }
 
     @GetMapping("{username}/not-assigned-trainers")
-    public ResponseEntity getNotAssignedTrainers(@PathVariable String username,
+    public ResponseEntity<?> getNotAssignedTrainers(@PathVariable String username,
                                                  @RequestHeader AuthDto authDto) {
         String transactionId = TransactionLogger.getTransactionId();
         LOGGER.info("[Transaction id: {}] GET /api/trainee/{}/not-assigned-trainers: Retrieve not assigned trainers initiated", transactionId, username);
@@ -154,7 +159,7 @@ public class TraineeController {
 //                                            )
 
     @PatchMapping("{username}/change-status")
-    public ResponseEntity changeStatus(@PathVariable String username,
+    public ResponseEntity<?> changeStatus(@PathVariable String username,
                                        @RequestHeader AuthDto authDto,
                                        @RequestBody Boolean newStatus){
         String transactionId = TransactionLogger.getTransactionId();

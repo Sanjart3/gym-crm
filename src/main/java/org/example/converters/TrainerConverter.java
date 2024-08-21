@@ -3,7 +3,9 @@ package org.example.converters;
 import org.example.dto.TrainerUpdateRequestDto;
 import org.example.entities.Trainer;
 import org.example.entities.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TrainerConverter {
     public Trainer fromTrainerUpdateRequestToTrainer(TrainerUpdateRequestDto trainerUpdateRequestDto) {
         String firstName = trainerUpdateRequestDto.getFirstName();
